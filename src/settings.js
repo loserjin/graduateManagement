@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: '高校光盘行动餐厅后台',
 
   /**
    * @type {boolean} true | false
