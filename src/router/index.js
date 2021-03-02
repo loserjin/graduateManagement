@@ -91,6 +91,19 @@ export const constantRoutes = [
   },
 
   {
+    path: '/dailyMenu',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'dailyMenu',
+        component: () => import('@/views/dailyMenu/index'),
+        meta: { title: '日常菜谱', icon: '菜谱' }
+      }
+    ]
+  },
+
+  {
     path: '/foodMaterial',
     component: Layout,
     redirect: '/nested/menu1',
@@ -100,7 +113,7 @@ export const constantRoutes = [
         component: () => import('@/views/foodMaterial/index'), // Parent router-view
         name: '食材材料',
         meta: {
-          title: '食材',
+          title: '食材订单',
           icon: '材料'
         }
       }

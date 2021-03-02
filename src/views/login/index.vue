@@ -41,6 +41,13 @@
         </span>
       </el-form-item>
 
+      <div class="idRadio">
+        <el-radio-group v-model="loginForm.IDType">
+          <el-radio label="0"> 管理员</el-radio>
+          <el-radio label="1">超级管理员</el-radio>
+        </el-radio-group>
+      </div>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
       <div class="tips">
@@ -72,14 +79,23 @@ export default {
         callback()
       }
     }
+    const validateIDType = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('please choose a id type！'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        IDType: '0'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        IDType: [{ required: true, trigger: 'blur', validator: validateIDType }]
       },
       loading: false,
       passwordType: 'password',
@@ -168,6 +184,10 @@ $cursor: #fff;
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
+  }
+  .idRadio{
+    margin: 1rem auto;
+    text-align: center;
   }
 }
 </style>

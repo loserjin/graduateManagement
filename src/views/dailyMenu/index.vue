@@ -29,25 +29,25 @@
     />
     <el-table-column
       prop="name"
-      label="材料名称"
+      label="菜名"
       width="120"
       align="center"
     />
     <el-table-column
       prop="picture"
-      label="材料数量（斤）"
+      label="菜式ID"
       width="120"
       align="center"
     />
     <el-table-column
       prop="money"
-      label="单价"
+      label="价钱"
       width="120"
       align="center"
     />
     <el-table-column
       prop="material"
-      label="总价"
+      label="食材"
       width="150"
       align="center"
     />
@@ -63,7 +63,7 @@
       align="center"
     >
       <template slot-scope="scope">
-        <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
+        <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
         <el-button type="text" size="small">移除</el-button>
       </template>
     </el-table-column>

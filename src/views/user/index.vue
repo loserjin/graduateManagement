@@ -1,17 +1,66 @@
 <template>
-  <div class="app-container">
-    <el-input v-model="filterText" placeholder="Filter keyword" style="margin-bottom:30px;" />
-
-    <el-tree
-      ref="tree2"
-      :data="data2"
-      :props="defaultProps"
-      :filter-node-method="filterNode"
-      class="filter-tree"
-      default-expand-all
+  <el-table
+    :data="tableData"
+    border
+    style="width: 100%"
+  >
+    <el-table-column align="center" label="" width="50" fixed>
+      <template slot-scope="scope">
+        {{ scope.$index+1 }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      align="center"
+      prop="id"
+      label="用户ID"
+      width="150"
     />
-
-  </div>
+    <el-table-column
+      align="center"
+      prop="name"
+      label="姓名"
+      width="120"
+    />
+    <el-table-column
+      align="center"
+      prop="sex"
+      label="性别"
+      width="80"
+    />
+    <el-table-column
+      align="center"
+      prop="age"
+      label="年龄"
+      width="80"
+    />
+    <el-table-column
+      align="center"
+      prop="email"
+      label="邮箱"
+      width="200"
+    />
+    <el-table-column
+      align="center"
+      prop="phone"
+      label="联系方式"
+      width="180"
+    />
+    <el-table-column
+      align="center"
+      prop="regTime"
+      label="注册时间"
+      width="210"
+    />
+    <el-table-column
+      align="center"
+      fixed="right"
+      label="操作"
+    >
+      <template slot-scope="scope">
+        <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
@@ -19,60 +68,20 @@ export default {
 
   data() {
     return {
-      filterText: '',
-      data2: [{
-        id: 1,
-        label: 'Level one 1',
-        children: [{
-          id: 4,
-          label: 'Level two 1-1',
-          children: [{
-            id: 9,
-            label: 'Level three 1-1-1'
-          }, {
-            id: 10,
-            label: 'Level three 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: 'Level one 2',
-        children: [{
-          id: 5,
-          label: 'Level two 2-1'
-        }, {
-          id: 6,
-          label: 'Level two 2-2'
-        }]
-      }, {
-        id: 3,
-        label: 'Level one 3',
-        children: [{
-          id: 7,
-          label: 'Level two 3-1'
-        }, {
-          id: 8,
-          label: 'Level two 3-2'
-        }]
-      }],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
+      tableData: [{
+        regTime: '2016-05-02',
+        name: '王小虎',
+        phone: '15115478986',
+        age: '22',
+        id: '123434343',
+        email: '454@163.com'
+      }]
     }
   },
-  watch: {
-    filterText(val) {
-      this.$refs.tree2.filter(val)
-    }
-  },
-
   methods: {
-    filterNode(value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
+    handleChec(row) {
+      console.log(row)
     }
   }
 }
 </script>
-
