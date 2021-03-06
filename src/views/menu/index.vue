@@ -71,6 +71,49 @@
       </el-dialog>
 
     </div>
+    <div class="dialog">
+      <el-dialog
+        title="修改食材订单信息"
+        :visible.sync="changeAddVisible"
+        width="50%"
+      >
+        <div>
+          <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="饭堂ID">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="楼层">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="类别">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="菜名">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="菜式ID">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="菜图">
+              <span><img src="" alt=""></span>
+            </el-form-item>
+            <el-form-item label="价钱">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="食材">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="创建日期">
+              <el-input v-model="form.name" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="changeAddVisible = false">取 消</el-button>
+          <el-button type="primary" @click="changeAddDiaClose">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
     <el-table
       :data="tableData"
       border
@@ -135,7 +178,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">查看</el-button>
+          <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
           <el-button type="text" size="small" @click="handleChange(scope.row)">修改</el-button>
           <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
         </template>
@@ -170,6 +213,10 @@ export default {
       addMoney: '',
       addMaterial: '',
       addMenuID: '',
+      changeAddVisible: false,
+      form: {
+        name: ''
+      },
       tableData: [{
         id: '1001',
         floor: '1',
@@ -228,11 +275,18 @@ export default {
     dialogFormConfirm() {
       this.dialogFormVisible = false
     },
+    changeAddDiaClose() {
+      this.changeAddVisible = false
+    },
     handleSelectionChange() {
       console.log('ad')
     },
-    handleClick(row) {
+    handleCheck(row) {
       console.log(row)
+      this.changeAddVisible = true
+    },
+    handleChange(row) {
+      this.changeAddVisible = true
     },
     handleDelete(row) {
       console.log(row)

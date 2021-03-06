@@ -1,67 +1,120 @@
 <template>
-  <div class="app-container">
+  <div>
+    <div class="header">
+      <div class="search">
+        <span class="input"><el-input v-model="search" placeholder="请输入内容" /></span>
+        <span><el-button type="primary" @click="handleSearch">搜索</el-button></span>
+      </div>
+      <div>
+        <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
+      </div>
+    </div>
     <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="加载中"
+      :data="tableData"
       border
-      fit
-      highlight-current-row
+      style="width: 100%"
     >
-      <el-table-column align="center" label="" width="50">
+      <el-table-column align="center" label="" width="50" fixed>
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.$index+1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column
+        prop="id"
+        label="ID"
+        width="120"
+        align="center"
+      />
+      <el-table-column
+        prop="floor"
+        label="姓名"
+        width="80"
+        align="center"
+      />
+      <el-table-column
+        prop="type"
+        label="性别"
+        width="150"
+        align="center"
+      />
+      <el-table-column
+        prop="name"
+        label="年龄"
+        width="120"
+        align="center"
+      />
+      <el-table-column
+        prop="picture"
+        label="管理员类型"
+        width="120"
+        align="center"
+      />
+      <el-table-column
+        prop="money"
+        label="单联系方式"
+        width="120"
+        align="center"
+      />
+      <el-table-column
+        prop="material"
+        label="注册时间"
+        width="150"
+        align="center"
+      />
+      <el-table-column
+        fixed="right"
+        label="操作"
+        align="center"
+      >
         <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="姓名" width="110">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="性别" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="年龄" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column label="管理员类型" width="120" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="联系方式" width="140" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="注册时间" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
-          <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scopr.row)">移除</el-button>
+          <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
+          <el-button type="text" size="small" @click="handleChange(scope.row)">修改</el-button>
+          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <div class="dialog">
+      <el-dialog
+        :title="diaTitle"
+        :visible.sync="changeCheckVisible"
+        width="50%"
+      >
+        <div>
+          <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="ID">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="姓名">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="年龄">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="管理员类型">
+              <el-input v-model="form.name" />
+            </el-form-item>
+            <el-form-item label="联系方式">
+              <span><img src="" alt=""></span>
+            </el-form-item>
+            <el-form-item label="注册时间">
+              <el-input v-model="form.name" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="changeCheckVisible = false">取 消</el-button>
+          <el-button type="primary" @click="changeCheckDiaClose">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
 
 export default {
   filters: {
@@ -76,30 +129,56 @@ export default {
   },
   data() {
     return {
-      list: null,
+      search: '',
+      form: {
+        name: ''
+      },
+      diaTitle: '管理员详情',
+      changeCheckVisible: false,
+      tableData: [{}],
       listLoading: true
     }
   },
   created() {
-    this.fetchData()
   },
   methods: {
-    fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    handleSearch() {
+      console.log('s')
+    },
+    handleAdd() {
+      console.log('d')
+      this.changeCheckVisible = true
     },
     handleCheck() {
       console.log('查看')
+      this.changeCheckVisible = true
     },
     handleChange() {
       console.log('修改')
+      this.changeCheckVisible = true
     },
     handleDelete() {
       console.log('移除')
+    },
+    changeCheckDiaClose() {
+      this.changeCheckVisible = false
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.header{
+    display:flex;
+    margin: 10px 1rem;
+    justify-content:space-between;
+    .search{
+      display: flex;
+      .input{
+        width: 20rem;
+        margin-right: 2rem;
+      }
+    }
+    .date{
+    }
+  }
+</style>
