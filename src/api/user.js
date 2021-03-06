@@ -22,3 +22,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+// 查看用户信息
+export function checkUserInfo(data) {
+  return request({
+    url: '',
+    method: ''
+  })
+}

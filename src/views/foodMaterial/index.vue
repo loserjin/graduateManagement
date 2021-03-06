@@ -5,6 +5,9 @@
         <span class="input"><el-input v-model="input" placeholder="请输入内容" /></span>
         <span><el-button type="primary" @click="handleSearch">搜索</el-button></span>
       </div>
+      <div>
+        <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
+      </div>
       <div class="date">
         <el-date-picker
           v-model="date"
@@ -180,6 +183,10 @@ export default {
     handleClick(row) {
       this.changeVisible = true
       console.log(row)
+    },
+    handleAdd() {
+      this.changeVisible = true
+      console.log('d')
     }
   }
 }
