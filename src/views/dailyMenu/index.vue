@@ -92,39 +92,39 @@
         <div>
           <div class="dia_item">
             <span>饭堂ID:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>楼层:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>类别:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>菜名:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>菜式ID:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>价钱:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>食材:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
           <div class="dia_item">
             <span>菜图:</span>
-            <span><img src="" alt="1"></span>
+            <span><img :src="menuDtail.ID" alt=""></span>
           </div>
           <div class="dia_item">
             <span>日期:</span>
-            <span>1</span>
+            <span>{{ menuDtail.ID }}</span>
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -145,6 +145,10 @@ export default {
       search: '',
       date: '',
       menuDetail: false,
+      menuDtail: {
+        name: '',
+        ID: ''
+      },
       tableData: [{
         id: '1001',
         floor: '1',
@@ -217,7 +221,7 @@ export default {
   }
   .dialog{
     .dia_item{
-      margin-top: 10px;
+      margin-top: 15px;
     }
   }
   .tips{

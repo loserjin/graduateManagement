@@ -73,38 +73,38 @@
     </div>
     <div class="dialog">
       <el-dialog
-        title="修改食材订单信息"
+        :title="diaTitle"
         :visible.sync="changeAddVisible"
         width="50%"
       >
         <div>
           <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="饭堂ID">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="楼层">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="类别">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="菜名">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="菜式ID">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="菜图">
               <span><img src="" alt=""></span>
             </el-form-item>
             <el-form-item label="价钱">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="食材">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
             <el-form-item label="创建日期">
-              <el-input v-model="form.name" />
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
           </el-form>
         </div>
@@ -214,6 +214,8 @@ export default {
       addMaterial: '',
       addMenuID: '',
       changeAddVisible: false,
+      diaTitle: '',
+      isCheck: false,
       form: {
         name: ''
       },
@@ -264,6 +266,8 @@ export default {
     },
     handleAdd() {
       this.dialogFormVisible = true
+      this.diaTitle = '增加菜式'
+      this.isCheck = false
       console.log('add')
     },
     handleRemove(file, fileList) {
@@ -283,10 +287,14 @@ export default {
     },
     handleCheck(row) {
       console.log(row)
+      this.diaTitle = '查看菜式详情'
       this.changeAddVisible = true
+      this.isCheck = true
     },
     handleChange(row) {
       this.changeAddVisible = true
+      this.diaTitle = '修改菜式详情'
+      this.isCheck = false
     },
     handleDelete(row) {
       console.log(row)

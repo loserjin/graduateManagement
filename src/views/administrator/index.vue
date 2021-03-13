@@ -81,27 +81,27 @@
         width="50%"
       >
         <div>
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="ID">
-              <el-input v-model="form.name" />
+          <el-form ref="form" :model="form">
+            <el-form-item label="ID" label-width="120px">
+              <el-input v-model="form.adminId" :disabled="isCheck" />
             </el-form-item>
-            <el-form-item label="姓名">
-              <el-input v-model="form.name" />
+            <el-form-item label="姓名" label-width="120px">
+              <el-input v-model="form.dminName" :disabled="isCheck" />
             </el-form-item>
-            <el-form-item label="性别">
-              <el-input v-model="form.name" />
+            <el-form-item label="性别" label-width="120px">
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
-            <el-form-item label="年龄">
-              <el-input v-model="form.name" />
+            <el-form-item label="年龄" label-width="120px">
+              <el-input v-model="form.name" :disabled="isCheck" />
             </el-form-item>
-            <el-form-item label="管理员类型">
-              <el-input v-model="form.name" />
+            <el-form-item label="管理员类型" label-width="120px">
+              <el-input v-model="form.adminRole" :disabled="isCheck" />
             </el-form-item>
-            <el-form-item label="联系方式">
-              <span><img src="" alt=""></span>
+            <el-form-item label="联系方式" label-width="120px">
+              <el-input v-model="form.adminTel" :disabled="isCheck" />
             </el-form-item>
-            <el-form-item label="注册时间">
-              <el-input v-model="form.name" />
+            <el-form-item label="注册时间" label-width="120px">
+              <el-input v-model="form.adminCreatime" :disabled="isCheck" />
             </el-form-item>
           </el-form>
         </div>
@@ -131,9 +131,21 @@ export default {
     return {
       search: '',
       form: {
-        name: ''
+        name: '',
+        adminId: '',
+        adminRole: '',
+        adminName: '',
+        adminPwd: '',
+        adminTel: '',
+        adminIdcard: '',
+        adminEmail: '',
+        departmentId: '',
+        adminCreatime: '',
+        adminStatus: ''
+
       },
       diaTitle: '管理员详情',
+      isCheck: false,
       changeCheckVisible: false,
       tableData: [{}],
       listLoading: true
@@ -148,13 +160,19 @@ export default {
     handleAdd() {
       console.log('d')
       this.changeCheckVisible = true
+      this.diaTitle = '增加管理员'
+      this.isCheck = false
     },
     handleCheck() {
       console.log('查看')
       this.changeCheckVisible = true
+      this.diaTitle = '查看管理员详情'
+      this.isCheck = true
     },
     handleChange() {
       console.log('修改')
+      this.diaTitle = '修改管理员详情'
+      this.isCheck = false
       this.changeCheckVisible = true
     },
     handleDelete() {

@@ -70,6 +70,7 @@
         prop="date"
         label="是否取餐"
         align="center"
+        width="100"
       />
       <el-table-column
         prop="date"
@@ -78,10 +79,8 @@
         align="center"
       />
       <el-table-column
-        fixed="right"
         prop="date"
         label="总价"
-        width="80"
         align="center"
       />
     </el-table>

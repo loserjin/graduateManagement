@@ -78,31 +78,31 @@
         <div>
           <div class="dia_item">
             <span>用户ID:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
           <div class="dia_item">
             <span>性名:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
           <div class="dia_item">
             <span>性别:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
           <div class="dia_item">
             <span>年龄:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
           <div class="dia_item">
             <span>邮箱:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
           <div class="dia_item">
             <span>联系方式:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
           <div class="dia_item">
             <span>注册时间:</span>
-            <span>1</span>
+            <span>{{ userDetailData.name }}</span>
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -122,6 +122,9 @@ export default {
     return {
       input: '',
       userDetail: false,
+      userDetailData: {
+        name: ''
+      },
       tableData: [{
         regTime: '2016-05-02',
         name: '王小虎',
@@ -162,6 +165,11 @@ export default {
       }
     }
     .date{
+    }
+  }
+  .dialog{
+    .dia_item{
+      margin-top: 10px;
     }
   }
 </style>
