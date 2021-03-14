@@ -78,7 +78,7 @@
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
-          <el-button type="text" size="small">移除</el-button>
+          <el-button type="text" size="small" @click="handleDelete">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -138,13 +138,14 @@
 </template>
 
 <script>
+import { getMaterialList, addMaterial, deleteMaterial, searchMaterial } from '@/api/dailyMenu.js'
 export default {
-
   data() {
     return {
       search: '',
       date: '',
       menuDetail: false,
+      isAdd: false,
       menuDtail: {
         name: '',
         ID: ''
@@ -185,9 +186,17 @@ export default {
       }]
     }
   },
+  mounted() {
+    getMaterialList().then(res => {
+      console.log(res)
+    })
+  },
   methods: {
     handleSearch() {
       console.log('search')
+      searchMaterial().then(res => {
+
+      })
     },
     handleCheck(row) {
       console.log(row)
@@ -197,9 +206,19 @@ export default {
       this.menuDetail = false
       console.log('close')
     },
+    handleDelete() {
+      deleteMaterial().then(res => {
+        console.log(res)
+      })
+    },
     diaClose() {
       console.log('close')
       this.menuDetail = false
+      if (this.isAdd) {
+        addMaterial().then(res => {
+          console.log(res)
+        })
+      }
     }
   }
 }

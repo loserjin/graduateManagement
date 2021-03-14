@@ -115,7 +115,7 @@
 </template>
 
 <script>
-
+import { addRegister, getAdminList, deleteAdmin, changeAdminInfo, searchAdmin } from '@/api/administrator.js'
 export default {
   filters: {
     statusFilter(status) {
@@ -152,16 +152,25 @@ export default {
     }
   },
   created() {
+    getAdminList().then(res => {
+      console.log(res)
+    })
   },
   methods: {
     handleSearch() {
       console.log('s')
+      searchAdmin().then(res => {
+        console.log(res)
+      })
     },
     handleAdd() {
       console.log('d')
       this.changeCheckVisible = true
       this.diaTitle = '增加管理员'
       this.isCheck = false
+      addRegister().then(res => {
+        console.log(res)
+      })
     },
     handleCheck() {
       console.log('查看')
@@ -177,9 +186,15 @@ export default {
     },
     handleDelete() {
       console.log('移除')
+      deleteAdmin().then(res => {
+        console.log(res)
+      })
     },
     changeCheckDiaClose() {
       this.changeCheckVisible = false
+      changeAdminInfo().then(res => {
+        console.log(res)
+      })
     }
   }
 }

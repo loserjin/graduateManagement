@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import { getOrderList } from '@/api/order.js'
 export default {
 
   data() {
@@ -127,6 +128,11 @@ export default {
         material: '白菜，猪肉'
       }]
     }
+  },
+  mounted() {
+    getOrderList().then(res => {
+      console.log(res)
+    })
   },
   methods: {
     handleClick(row) {

@@ -1,6 +1,7 @@
-import { login, logout, getInfo } from '@/api/user'
+import { logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { login } from '@/api/administrator.js'
 
 const getDefaultState = () => {
   return {
@@ -33,9 +34,10 @@ const actions = {
     const { username, password, userType } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password, userType: userType }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        const { records } = response.data.records[0]
+        commit('SET_TOKEN', records.token)
+        commit('SET_NAME', records.adminName)
+        setToken(records.token)
         resolve()
       }).catch(error => {
         reject(error)

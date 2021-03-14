@@ -9,7 +9,7 @@ export function login(data) {
 }
 
 // 增加管理员
-export function register(data) {
+export function addRegister(data) {
   return request({
     url: '/admin/edit',
     method: 'post',

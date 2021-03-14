@@ -122,7 +122,7 @@
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
-          <el-button type="text" size="small">移除</el-button>
+          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -131,6 +131,7 @@
 </template>
 
 <script>
+import { getMaterialList, changeMaterial, deleteMaterial, searchMaterial, addMaterial } from '@/api/material.js'
 export default {
 
   data() {
@@ -139,6 +140,7 @@ export default {
       form: {
         name: ''
       },
+      isAdd: false,
       changeVisible: false,
       tableData: [{
         id: '1001',
@@ -176,17 +178,46 @@ export default {
       }]
     }
   },
+  mounted() {
+    getMaterialList().then(response => {
+      console.log(response)
+    })
+  },
   methods: {
     changeDialogClose() {
       this.changeVisible = false
+      if (this.isAdd) {
+        addMaterial().then(response => {
+          console.log(response)
+        })
+      } else {
+        changeMaterial().then(response => {
+          console.log(response)
+        })
+      }
     },
+
     handleClick(row) {
       this.changeVisible = true
       console.log(row)
     },
+
     handleAdd() {
       this.changeVisible = true
+      this.isAdd = true
       console.log('d')
+    },
+
+    handleSearch() {
+      searchMaterial().then(res => {
+        console.log(res)
+      })
+    },
+
+    hanldeDelete(row) {
+      deleteMaterial().then(res => {
+        console.log(res)
+      })
     }
   }
 }

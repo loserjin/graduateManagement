@@ -34,7 +34,7 @@ service.interceptors.response.use(
       })
 
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+        MessageBox.confirm('你已经处于非登录状态，请重新登录', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'

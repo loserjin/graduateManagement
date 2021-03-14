@@ -61,27 +61,28 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { login } from '@/api/administrator.js'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入账号'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+      if (value.length < 0) {
+        callback(new Error('请输入密码'))
       } else {
         callback()
       }
     }
     const validateIDType = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('please choose a id type！'))
+      if (value !== '0' || value !== '1') {
+        callback(new Error('请选择管理员类型进行登录！'))
       } else {
         callback()
       }
@@ -125,6 +126,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          login()
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
