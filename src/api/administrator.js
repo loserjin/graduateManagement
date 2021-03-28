@@ -29,9 +29,8 @@ export function getAdminInfo(data) {
 // 获取管理员列表
 export function getAdminList(data) {
   return request({
-    url: '',
-    method: ''
-
+    url: '/admin/infos',
+    method: 'GET'
   })
 }
 

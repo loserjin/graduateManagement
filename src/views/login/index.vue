@@ -61,7 +61,6 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { login } from '@/api/administrator.js'
 
 export default {
   name: 'Login',
@@ -89,18 +88,17 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111',
-        IDType: '0'
+        adminName: 'admin',
+        adminPwd: 'admin',
+        adminRole: '0'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        IDType: [{ required: true, trigger: 'blur', validator: validateIDType }]
+        adminName: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        adminPwd: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        adminRole: [{ required: true, trigger: 'blur', validator: validateIDType }]
       },
       loading: false,
-      passwordType: 'password',
-      redirect: undefined
+      passwordType: 'password'
     }
   },
   watch: {
@@ -126,15 +124,14 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          login()
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+            console.log('login')
+            this.$router.push({ path: '/dashboard' })
             this.loading = false
           }).catch(() => {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

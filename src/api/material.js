@@ -3,15 +3,15 @@ import request from '@/utils/request'
 // 获取食材进货数据
 export function getMaterialList(data) {
   return request({
-    url: '',
-    method: ''
+    url: '/purchase/infos',
+    method: 'GET'
   })
 }
 
 // 增加食材进货数据
 export function addMaterial(data) {
   return request({
-    url: '',
+    url: '/purchase/edit',
     method: ''
   })
 }
@@ -27,7 +27,7 @@ export function changeMaterial(data) {
 // 删除食材进货数据
 export function deleteMaterial(data) {
   return request({
-    url: '',
+    url: '/purchase/delect',
     method: ''
   })
 }

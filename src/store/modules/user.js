@@ -5,9 +5,10 @@ import { login } from '@/api/administrator.js'
 
 const getDefaultState = () => {
   return {
-    token: getToken(),
+    token: '',
     name: '',
-    avatar: ''
+    avatar: '',
+    adminId: ''
   }
 }
 
@@ -25,19 +26,24 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ADMINID: (state, adminId) => {
+    state.adminId = adminId
   }
+
 }
 
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password, userType } = userInfo
+    const { adminName, adminPwd, adminRole } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password, userType: userType }).then(response => {
-        const { records } = response.data.records[0]
-        commit('SET_TOKEN', records.token)
-        commit('SET_NAME', records.adminName)
-        setToken(records.token)
+      login({ adminName: adminName.trim(), adminPwd: adminPwd, adminRole: adminRole }).then(response => {
+        const { res, token } = response
+        commit('SET_TOKEN', token)
+        commit('SET_ADMINID', res.data.adminId)
+        commit('SET_NAME', res.data.adminName)
+        setToken(token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -48,17 +54,15 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
+      getInfo(state.adminId).then(response => {
+        const { data } = this.$store.getters
         if (!data) {
           return reject('账号密码错误，请重新登录.')
         }
-
-        const { name, avatar } = data
-
+        const { name, avatar, adminId } = data
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_ADMINID', adminId)
         resolve(data)
       }).catch(error => {
         reject(error)

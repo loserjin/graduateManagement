@@ -20,43 +20,43 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="id"
+        prop="adminId"
         label="ID"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="floor"
+        prop="adminName"
         label="姓名"
         width="80"
         align="center"
       />
       <el-table-column
-        prop="type"
+        prop="adminSex"
         label="性别"
         width="150"
         align="center"
       />
       <el-table-column
-        prop="name"
-        label="年龄"
+        prop="departmentName"
+        label="单位"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="picture"
+        prop="adminRole"
         label="管理员类型"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="money"
-        label="单联系方式"
+        prop="adminTel"
+        label="联系方式"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="material"
+        prop="adminCreatime"
         label="注册时间"
         width="150"
         align="center"
