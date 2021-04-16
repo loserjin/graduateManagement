@@ -14,11 +14,9 @@
       >
         <div>
           <el-form ref="form" :model="form" label-width="80px">
-            <template v-show="!isEdit">
-              <el-form-item label="饭堂ID">
-                <el-input v-model="form.departmentId" :disabled="disable" />
-              </el-form-item>
-            </template>
+            <el-form-item v-if="isAdd==false" label="饭堂ID">
+              <el-input v-model="form.departmentId" :disabled="disable" />
+            </el-form-item>
             <el-form-item label="饭堂名称">
               <el-input v-model="form.departmentName" :disabled="disable" />
             </el-form-item>
@@ -113,7 +111,6 @@ export default {
             this.$message('新增失败，请重试')
           }
         })
-        this.isAdd = false
       } else if (this.isEdit) {
         addDiningHall(this.form).then(res => {
           if (res.code === 200) {
@@ -123,9 +120,11 @@ export default {
             this.$message('修改失败，请重试')
           }
         })
-        this.isEdit = false
       }
       this.changeVisible = false
+      this.isEdit = false
+      this.isAdd = false
+      this.isCheck = false
     },
     handleEdit(row) {
       this.changeVisible = true
@@ -163,6 +162,9 @@ export default {
     },
     handleClose() {
       this.changeVisible = false
+      this.isEdit = false
+      this.isAdd = false
+      this.isCheck = false
     }
   }
 }

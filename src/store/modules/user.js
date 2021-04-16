@@ -38,7 +38,7 @@ const actions = {
   login({ commit }, userInfo) {
     const { adminName, adminPwd, adminRole } = userInfo
     return new Promise((resolve, reject) => {
-      login({ adminName: adminName.trim(), adminPwd: adminPwd, adminRole: adminRole }).then(response => {
+      login({ adminName: adminName.trim(), adminPwd: adminPwd.trim(), adminRole: adminRole }).then(response => {
         const { res, token } = response
         sessionStorage.setItem('token', token)
         commit('SET_TOKEN', token)

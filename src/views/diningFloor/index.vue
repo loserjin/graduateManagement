@@ -12,11 +12,9 @@
       >
         <div>
           <el-form ref="form" :model="form" label-width="80px">
-            <template v-show="!isAdd">
-              <el-form-item label="楼层ID">
-                <el-input v-model="form.departmentfloorId" :disable="disable" />
-              </el-form-item>
-            </template>
+            <el-form-item v-if="isAdd==false" label="楼层ID">
+              <el-input v-model="form.departmentfloorId" :disable="disable" />
+            </el-form-item>
             <el-form-item label="楼层名称">
               <el-input v-model="form.departmentfloorName" :disable="disable" />
             </el-form-item>
@@ -129,7 +127,6 @@ export default {
             this.$message('新增失败，请重试')
           }
         })
-        this.isAdd = false
       } else if (this.isEdit) {
         addDiningFloor(this.form).then(res => {
           if (res.code === 200) {
@@ -139,23 +136,25 @@ export default {
             this.$message('修改失败，请重试')
           }
         })
-        this.isEdit = false
       }
       this.changeVisible = false
+      this.isEdit = false
+      this.isAdd = false
+      this.isCheck = false
     },
-    handlCheck(row) {
+    handleCheck(row) {
       this.title = '查看食材订单信息'
       this.isCheck = true
       this.disable = true
-      this.changeVisible = true
       this.form = row
+      this.changeVisible = true
     },
     handleChange(row) {
       this.isEdit = true
       this.title = '修改食材订单信息'
       this.disable = false
-      this.changeVisible = true
       this.form = row
+      this.changeVisible = true
     },
     handleAdd() {
       this.title = '增加食材订单信息'
@@ -164,11 +163,11 @@ export default {
         departmentId: '',
         departmentName: ''
       }
-      this.isAdd = true
       this.disable = false
+      this.isAdd = true
       this.changeVisible = true
     },
-    hanldeDelete(row) {
+    handleDelete(row) {
       deleteDiningFloor({ departmentfloorId: row.departmentfloorId }).then(res => {
         if (res.code === 200) {
           this.$message('删除成功')
@@ -180,6 +179,9 @@ export default {
     },
     handleClose() {
       this.changeVisible = false
+      this.isEdit = false
+      this.isAdd = false
+      this.isCheck = false
     }
   }
 }

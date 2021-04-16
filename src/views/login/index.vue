@@ -128,7 +128,6 @@ export default {
             this.$router.push({ path: '/dashboard' })
             this.loading = false
           }).catch((err) => {
-            console.log(err)
             this.loading = false
             this.$message.error(err.msg)
           })
