@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 5000,
@@ -10,9 +10,8 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    if (store.state.user.token) {
-      config.headers['Authorization'] = `Bearer${store.state.user.token}`
-      // config.headers['X-Token'] = getToken()
+    if (sessionStorage.getItem('token')) {
+      config.headers['Authorization'] = sessionStorage.getItem('token')
     }
     return config
   },
@@ -20,7 +19,6 @@ service.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
 service.interceptors.response.use(
   response => {
     const res = response.data
@@ -28,13 +26,13 @@ service.interceptors.response.use(
       Message({
         message: res.message || 'Error',
         type: 'error',
-        duration: 5 * 1000
+        duration: 10 * 1000
       })
 
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('你已经处于非登录状态，请重新登录', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+        MessageBox.confirm('你已经处于非登录状态，请重新登录', '确定退出登录？', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
@@ -54,6 +52,14 @@ service.interceptors.response.use(
     }
   },
   error => {
+    if (error.msg) {
+      Message({
+        message: error.msg,
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject(error)
+    }
     Message({
       message: error.message,
       type: 'error',

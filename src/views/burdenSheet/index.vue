@@ -1,20 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <div class="search">
-        <span class="input"><el-input v-model="input" placeholder="请输入内容" /></span>
-        <span><el-button type="primary" @click="handleSearch">搜索</el-button></span>
-      </div>
-      <div>
-        <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
-      </div>
-      <div class="date">
-        <el-date-picker
-          v-model="date"
-          type="date"
-          placeholder="选择日期"
-        />
-      </div>
+      <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
     </div>
     <div class="dialog">
       <el-dialog
@@ -68,101 +55,67 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="departmentId"
-        label="饭堂ID"
-        width="120"
+        prop="componentId"
+        label="配料ID"
         align="center"
       />
       <el-table-column
-        prop="departmentfloorId"
-        label="楼层"
-        width="80"
+        prop="componentName"
+        label="配料名称"
         align="center"
       />
       <el-table-column
-        prop="purchaseType"
-        label="类别"
-        width="150"
+        prop="componentMoney"
+        label="配料价钱"
         align="center"
       />
       <el-table-column
-        prop="purchaseName"
-        label="材料名称"
-        width="120"
+        prop="componentPic"
+        label="配料图片"
         align="center"
       />
       <el-table-column
-        prop="purchaseTotal"
-        label="材料数量（斤）"
-        width="120"
+        prop="adminId"
+        label="管理员ID"
         align="center"
       />
       <el-table-column
-        prop="purchaseMoney"
-        label="单价"
-        width="120"
+        prop="adminName"
+        label="管理员名称"
         align="center"
       />
-      <el-table-column
-        prop="purchaseTotalmoney"
-        label="总价"
-        width="150"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseCreatime"
-        label="日期"
-        width="120"
-        align="center"
-      />
-      <el-table-column
-        fixed="right"
-        label="操作"
-        align="center"
-      >
+      <el-table-column>
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
           <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div class="tips">默认显示最新食材进货数据，可根据日期选择当天食材进货数据</div>
   </div>
 </template>
 
 <script>
-import { getMaterialList, changeMaterial, deleteMaterial, searchMaterial, addMaterial } from '@/api/material.js'
+import { getBurdenList } from '@/api/burdenSheet.js'
 export default {
 
   data() {
     return {
-      date: '',
       form: {
         name: ''
       },
-      input: '',
       isAdd: false,
       changeVisible: false,
       tableData: []
     }
   },
   mounted() {
-    getMaterialList().then(response => {
+    getBurdenList().then(response => {
       this.tableData = response.data.records
     })
   },
   methods: {
     changeDialogClose() {
       this.changeVisible = false
-      if (this.isAdd) {
-        addMaterial().then(response => {
-          console.log(response)
-        })
-      } else {
-        changeMaterial().then(response => {
-          console.log(response)
-        })
-      }
     },
 
     handleClick(row) {
@@ -175,38 +128,15 @@ export default {
       this.isAdd = true
       console.log('d')
     },
-
-    handleSearch() {
-      searchMaterial().then(res => {
-        console.log(res)
-      })
-    },
-
     hanldeDelete(row) {
-      deleteMaterial().then(res => {
-        console.log(res)
-      })
+
     }
   }
 }
 </script>
 <style lang="scss" scoped>
  .header{
-    display:flex;
-    margin: 10px 1rem;
-    justify-content:space-between;
-    .search{
-      display: flex;
-      .input{
-        width: 20rem;
-        margin-right: 2rem;
-      }
-    }
-    .date{
-    }
-  }
-  .tips{
-    margin-left: 2rem;
-    color:grey;
+   text-align: right;
+   margin:10px 80px;
   }
 </style>

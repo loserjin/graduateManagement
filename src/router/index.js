@@ -54,7 +54,6 @@ export const constantRoutes = [
       meta: { title: '首页', icon: '首页' }
     }]
   },
-
   {
     path: '/personnelManagement',
     component: Layout,
@@ -76,20 +75,56 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
-    path: '/menu',
+    path: '/diningHall',
     component: Layout,
+    meta: { title: '饭堂楼层信息', icon: '人员管理' },
     children: [
       {
+        path: '/dining',
+        name: 'diningHall',
+        component: () => import('@/views/diningHall/index'),
+        meta: { title: '饭堂信息', icon: '菜谱' }
+      },
+      {
         path: 'index',
-        name: 'Menu',
-        component: () => import('@/views/menu/index'),
-        meta: { title: '菜谱', icon: '菜谱' }
+        name: 'dingingFloor',
+        component: () => import('@/views/diningFloor/index'),
+        meta: { title: '楼层信息', icon: '菜谱' }
       }
     ]
   },
-
+  {
+    path: '/menuType',
+    component: Layout,
+    children: [
+      {
+        path: '/menuType',
+        name: 'menuType',
+        component: () => import('@/views/menuType/index'),
+        meta: { title: '菜系信息', icon: '菜谱' }
+      }
+    ]
+  },
+  {
+    path: '/menu',
+    component: Layout,
+    meta: { title: '菜谱信息', icon: '人员管理' },
+    children: [
+      {
+        path: '/menuMessage',
+        name: 'Menu',
+        component: () => import('@/views/menu/index'),
+        meta: { title: '全部菜谱', icon: '菜谱' }
+      },
+      {
+        path: '/burdenSheet',
+        name: 'burdenSheet',
+        component: () => import('@/views/burdenSheet/index'),
+        meta: { title: '菜谱配料表', icon: '菜谱' }
+      }
+    ]
+  },
   {
     path: '/dailyMenu',
     component: Layout,
@@ -102,7 +137,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/foodMaterial',
     component: Layout,
@@ -119,7 +153,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/orderForm',
     component: Layout,
@@ -127,13 +160,12 @@ export const constantRoutes = [
     children: [
       {
         path: 'orderForm',
-        meta: { title: '订单', icon: '订单' },
+        meta: { title: '用户订单', icon: '订单' },
         name: 'orderForm',
         component: () => import('@/views/orderForm/index')
       }
     ]
   },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -1,7 +1,7 @@
-import { logout, getInfo } from '@/api/user'
+import { getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import { login } from '@/api/administrator.js'
+import { login, logout } from '@/api/administrator.js'
 
 const getDefaultState = () => {
   return {
@@ -40,6 +40,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ adminName: adminName.trim(), adminPwd: adminPwd, adminRole: adminRole }).then(response => {
         const { res, token } = response
+        sessionStorage.setItem('token', token)
         commit('SET_TOKEN', token)
         commit('SET_ADMINID', res.data.adminId)
         commit('SET_NAME', res.data.adminName)
@@ -73,9 +74,10 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      logout().then(() => {
         removeToken() // must remove  token  first
         resetRouter()
+        sessionStorage.removeItem('token')
         commit('RESET_STATE')
         resolve()
       }).catch(error => {

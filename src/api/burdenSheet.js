@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 // 获取菜单列表
-export function getMenuList(params) {
+export function getBurdenList(params) {
   return request({
-    url: '/type/infos',
+    url: '/component/infos',
     method: 'GET',
     params: { params }
   })

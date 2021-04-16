@@ -24,37 +24,37 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="id"
+        prop="departmentId"
         label="饭堂ID"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="floor"
+        prop="departmentfloorName"
         label="楼层"
         width="80"
         align="center"
       />
       <el-table-column
-        prop="type"
-        label="类别"
+        prop="menuPic"
+        label="菜图"
         width="150"
         align="center"
       />
       <el-table-column
-        prop="name"
+        prop="menuName"
         label="菜名"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="picture"
+        prop="dailymenuId"
         label="菜式ID"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="money"
+        prop="menuFMoney"
         label="价钱"
         width="120"
         align="center"
@@ -66,7 +66,7 @@
         align="center"
       />
       <el-table-column
-        prop="date"
+        prop="dailymenuCreatime"
         label="日期"
         width="120"
         align="center"
@@ -78,7 +78,7 @@
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
-          <el-button type="text" size="small" @click="handleDelete">移除</el-button>
+          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -150,45 +150,15 @@ export default {
         name: '',
         ID: ''
       },
-      tableData: [{
-        id: '1001',
-        floor: '1',
-        date: '2016-05-02',
-        name: '王小虎',
-        type: '南北风味',
-        province: '上海',
-        money: '11',
-        material: '白菜，猪肉'
-      }, {
-        id: '1002',
-        floor: '2',
-        type: '南北风味',
-        money: '11',
-        date: '2016-05-04',
-        name: '王小虎',
-        material: '白菜，猪肉'
-      }, {
-        id: '1003',
-        floor: '3',
-        type: '南北风味',
-        date: '2016-05-01',
-        money: '11',
-        name: '王小虎',
-        material: '白菜，猪肉'
-      }, {
-        id: '1004',
-        floor: '4',
-        date: '2016-05-03',
-        type: '南北风味',
-        name: '王小虎',
-        money: '11',
-        material: '白菜，猪肉'
-      }]
+      tableData: []
     }
   },
   mounted() {
     getMaterialList().then(res => {
-      console.log(res)
+      const { records = [] } = res.data
+      if (res.code === 200) {
+        this.tableData = records
+      }
     })
   },
   methods: {
@@ -206,7 +176,8 @@ export default {
       this.menuDetail = false
       console.log('close')
     },
-    handleDelete() {
+    handleDelete(message) {
+      console.log(message)
       deleteMaterial().then(res => {
         console.log(res)
       })

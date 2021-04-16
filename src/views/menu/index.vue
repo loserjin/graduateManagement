@@ -125,31 +125,31 @@
         width="55"
       />
       <el-table-column
-        prop="id"
+        prop="departmentId"
         label="饭堂ID"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="floor"
-        label="楼层"
-        width="80"
+        prop="departmentName"
+        label="饭堂名称"
+        width="120"
         align="center"
       />
       <el-table-column
-        prop="type"
-        label="类别"
+        prop="departmentId"
+        label="饭堂ID"
         width="150"
         align="center"
       />
       <el-table-column
-        prop="name"
+        prop="typeName"
         label="菜名"
         width="120"
         align="center"
       />
       <el-table-column
-        prop="menuID"
+        prop="typeId"
         label="菜式ID"
         width="80"
         align="center"
@@ -161,14 +161,14 @@
         align="center"
       />
       <el-table-column
-        prop="material"
-        label="食材"
+        prop="departmentfloorName"
+        label="饭堂楼层ID"
         width="150"
         align="center"
       />
       <el-table-column
-        prop="date"
-        label="创建日期"
+        prop="departmentfloorName"
+        label="饭堂名称楼层"
         width="120"
         align="center"
       />
@@ -200,6 +200,7 @@
 </template>
 
 <script>
+import { getMenuList, deleteMenuList, searchMenu, changeMenu } from '@/api/menu.js'
 export default {
   data() {
     return {
@@ -219,46 +220,21 @@ export default {
       form: {
         name: ''
       },
-      tableData: [{
-        id: '1001',
-        floor: '1',
-        date: '2016-05-02',
-        name: '王小虎',
-        type: '南北风味',
-        province: '上海',
-        money: '11',
-        material: '白菜，猪肉'
-      }, {
-        id: '1002',
-        floor: '2',
-        type: '南北风味',
-        money: '11',
-        date: '2016-05-04',
-        name: '王小虎',
-        material: '白菜，猪肉'
-      }, {
-        id: '1003',
-        floor: '3',
-        type: '南北风味',
-        date: '2016-05-01',
-        money: '11',
-        name: '王小虎',
-        material: '白菜，猪肉'
-      }, {
-        id: '1004',
-        floor: '4',
-        date: '2016-05-03',
-        type: '南北风味',
-        name: '王小虎',
-        money: '11',
-        material: '白菜，猪肉'
-      }],
+      tableData: [],
       total: 30,
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
       currentPage4: 4
     }
+  },
+  mounted() {
+    getMenuList().then(res => {
+      if (res.code === 200) {
+        const { records = [] } = res.data
+        this.tableData = records
+      }
+    })
   },
   methods: {
     handleSearch() {

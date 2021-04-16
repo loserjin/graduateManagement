@@ -68,58 +68,46 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="typeId"
+        label="类型ID"
+        align="center"
+      />
+      <el-table-column
+        prop="typeName"
+        label="类型名称"
+        align="center"
+      />
+      <el-table-column
         prop="departmentId"
         label="饭堂ID"
-        width="120"
+        align="center"
+      />
+      <el-table-column
+        prop="departmentName"
+        label="饭堂名称"
         align="center"
       />
       <el-table-column
         prop="departmentfloorId"
-        label="楼层"
-        width="80"
+        label="饭堂楼层ID"
         align="center"
       />
       <el-table-column
-        prop="purchaseType"
-        label="类别"
-        width="150"
+        prop="departmentfloorName"
+        label="饭堂楼层名称"
         align="center"
       />
       <el-table-column
-        prop="purchaseName"
-        label="材料名称"
-        width="120"
+        prop="adminId"
+        label="管理员ID"
         align="center"
       />
       <el-table-column
-        prop="purchaseTotal"
-        label="材料数量（斤）"
-        width="120"
+        prop="adminName"
+        label="管理员名称"
         align="center"
       />
-      <el-table-column
-        prop="purchaseMoney"
-        label="单价"
-        width="120"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseTotalmoney"
-        label="总价"
-        width="150"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseCreatime"
-        label="日期"
-        width="120"
-        align="center"
-      />
-      <el-table-column
-        fixed="right"
-        label="操作"
-        align="center"
-      >
+      <el-table-column>
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
           <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
@@ -131,7 +119,7 @@
 </template>
 
 <script>
-import { getMaterialList, changeMaterial, deleteMaterial, searchMaterial, addMaterial } from '@/api/material.js'
+import { getMenuType } from '@/api/menuType.js'
 export default {
 
   data() {
@@ -147,22 +135,13 @@ export default {
     }
   },
   mounted() {
-    getMaterialList().then(response => {
+    getMenuType().then(response => {
       this.tableData = response.data.records
     })
   },
   methods: {
     changeDialogClose() {
       this.changeVisible = false
-      if (this.isAdd) {
-        addMaterial().then(response => {
-          console.log(response)
-        })
-      } else {
-        changeMaterial().then(response => {
-          console.log(response)
-        })
-      }
     },
 
     handleClick(row) {
@@ -177,15 +156,11 @@ export default {
     },
 
     handleSearch() {
-      searchMaterial().then(res => {
-        console.log(res)
-      })
+
     },
 
     hanldeDelete(row) {
-      deleteMaterial().then(res => {
-        console.log(res)
-      })
+
     }
   }
 }

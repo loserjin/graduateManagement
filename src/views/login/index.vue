@@ -12,7 +12,7 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
+          v-model="loginForm.adminName"
           placeholder="Username"
           name="username"
           type="text"
@@ -28,7 +28,7 @@
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model="loginForm.adminPwd"
           :type="passwordType"
           placeholder="Password"
           name="password"
@@ -42,7 +42,7 @@
       </el-form-item>
 
       <div class="idRadio">
-        <el-radio-group v-model="loginForm.IDType">
+        <el-radio-group v-model="loginForm.adminRole">
           <el-radio label="0"> 管理员</el-radio>
           <el-radio label="1">超级管理员</el-radio>
         </el-radio-group>
@@ -88,9 +88,9 @@ export default {
     }
     return {
       loginForm: {
-        adminName: 'admin',
-        adminPwd: 'admin',
-        adminRole: '0'
+        adminName: '',
+        adminPwd: '',
+        adminRole: '1'
       },
       loginRules: {
         adminName: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -125,11 +125,12 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            console.log('login')
             this.$router.push({ path: '/dashboard' })
             this.loading = false
-          }).catch(() => {
+          }).catch((err) => {
+            console.log(err)
             this.loading = false
+            this.$message.error(err.msg)
           })
         } else {
           return false
