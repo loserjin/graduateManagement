@@ -115,6 +115,7 @@
       </el-dialog>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -225,18 +226,24 @@ export default {
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
-      currentPage4: 4
+      currentPage4: 4,
+      loading: false
     }
   },
   mounted() {
-    getMenuList().then(res => {
-      if (res.code === 200) {
-        const { records = [] } = res.data
-        this.tableData = records
-      }
-    })
+    this.getData()
   },
   methods: {
+    async getData() {
+      this.loading = true
+      await getMenuList().then(res => {
+        if (res.code === 200) {
+          const { records = [] } = res.data
+          this.tableData = records
+        }
+      })
+      this.loading = false
+    },
     handleSearch() {
       console.log('search')
     },
@@ -244,7 +251,6 @@ export default {
       this.dialogFormVisible = true
       this.diaTitle = '增加菜式'
       this.isCheck = false
-      console.log('add')
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)

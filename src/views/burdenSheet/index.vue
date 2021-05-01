@@ -45,6 +45,7 @@
       </el-dialog>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"

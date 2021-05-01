@@ -41,6 +41,8 @@ const actions = {
       login({ adminName: adminName.trim(), adminPwd: adminPwd.trim(), adminRole: adminRole }).then(response => {
         const { res, token } = response
         sessionStorage.setItem('token', token)
+        sessionStorage.setItem('adminId', res.data.adminId)
+        sessionStorage.setItem('adminName', res.data.adminName)
         commit('SET_TOKEN', token)
         commit('SET_ADMINID', res.data.adminId)
         commit('SET_NAME', res.data.adminName)

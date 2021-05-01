@@ -58,6 +58,7 @@
       </el-dialog>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -131,15 +132,21 @@ export default {
       input: '',
       isAdd: false,
       changeVisible: false,
-      tableData: []
+      tableData: [],
+      loading: false
     }
   },
   mounted() {
-    getMenuType().then(response => {
-      this.tableData = response.data.records
-    })
+    this.getData()
   },
   methods: {
+    async getData() {
+      this.loading = true
+      await getMenuType().then(response => {
+        this.tableData = response.data.records
+      })
+      this.loading = false
+    },
     changeDialogClose() {
       this.changeVisible = false
     },

@@ -10,6 +10,7 @@
       </div>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -136,13 +137,16 @@
         </span>
       </el-dialog>
     </div>
-
+    <WordTips />
   </div>
 </template>
 
 <script>
+import WordTips from '@/components/tips/index'
 import { addRegister, getAdminList, deleteAdmin, changeAdminInfo, searchAdmin } from '@/api/administrator.js'
 export default {
+  name: 'Administrator',
+  components: { WordTips },
   filters: {
     statusFilter(status) {
       const statusMap = {

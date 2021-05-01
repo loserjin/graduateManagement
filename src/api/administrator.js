@@ -23,7 +23,7 @@ export function getAdminInfo(params) {
   return request({
     url: '/admin/info',
     method: 'get',
-    params: { params }
+    params: params
   })
 }
 

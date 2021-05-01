@@ -7,6 +7,7 @@
       </div>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -124,14 +125,8 @@ export default {
       userDetailData: {
         name: ''
       },
-      tableData: [{
-        regTime: '2016-05-02',
-        name: '王小虎',
-        phone: '15115478986',
-        age: '22',
-        id: '123434343',
-        email: '454@163.com'
-      }]
+      tableData: [],
+      loading: false
     }
   },
   methods: {

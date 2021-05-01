@@ -30,6 +30,7 @@
       </el-dialog>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -88,18 +89,20 @@ export default {
       disable: false,
       title: '',
       changeVisible: false,
-      tableData: []
+      tableData: [],
+      loading: false
     }
   },
   mounted() {
     this.getDiningHallList()
   },
   methods: {
-    getDiningHallList() {
-      getDiningHall().then(response => {
-        console.log(response)
+    async getDiningHallList() {
+      this.loading = true
+      await getDiningHall().then(response => {
         this.tableData = response.data.records
       })
+      this.loading = false
     },
     changeDialogClose() {
       if (this.isAdd) {

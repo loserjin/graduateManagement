@@ -1,19 +1,25 @@
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
+    <div class="header_name">
+      <span>用户：{{ adminName }}</span>
+    </div>
     <breadcrumb class="breadcrumb-container" />
-
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
               首页
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/personal-message">
+            <el-dropdown-item>
+              个人中心
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
@@ -29,18 +35,25 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import {logout} from '@/api/administrator'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger
   },
+  data: function() {
+    return {
+      adminName: ''
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
     ])
+  },
+  mounted() {
+    this.adminName = sessionStorage.getItem('adminName')
   },
   methods: {
     toggleSideBar() {
@@ -74,7 +87,12 @@ export default {
       background: rgba(0, 0, 0, .025)
     }
   }
-
+  .header_name{
+    position: absolute;
+    right: 100px;
+     height: 100%;
+    line-height: 50px;
+  }
   .breadcrumb-container {
     float: left;
   }

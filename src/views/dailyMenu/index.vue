@@ -84,6 +84,7 @@
     </el-table>
     <div class="dialog">
       <el-dialog
+        v-loading="loading"
         title="菜式详情"
         :visible.sync="menuDetail"
         width="50%"
@@ -150,18 +151,24 @@ export default {
         name: '',
         ID: ''
       },
-      tableData: []
+      tableData: [],
+      loading: false
     }
   },
   mounted() {
-    getMaterialList().then(res => {
-      const { records = [] } = res.data
-      if (res.code === 200) {
-        this.tableData = records
-      }
-    })
+    this.getData()
   },
   methods: {
+    async getData() {
+      this.loading = true
+      await getMaterialList().then(res => {
+        const { records = [] } = res.data
+        if (res.code === 200) {
+          this.tableData = records
+        }
+      })
+      this.loading = false
+    },
     handleSearch() {
       console.log('search')
       searchMaterial().then(res => {

@@ -33,6 +33,7 @@
       </el-dialog>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -103,17 +104,20 @@ export default {
       isCheck: false,
       disable: false,
       changeVisible: false,
-      tableData: []
+      tableData: [],
+      loading: false
     }
   },
   mounted() {
     this.getData()
   },
   methods: {
-    getData() {
-      getDiningFloor().then(response => {
+    async getData() {
+      this.loading = true
+      await getDiningFloor().then(response => {
         this.tableData = response.data.records
       })
+      this.loading = false
     },
     changeDialogClose() {
       if (this.isAdd) {
