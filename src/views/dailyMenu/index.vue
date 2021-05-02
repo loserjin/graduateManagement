@@ -2,8 +2,18 @@
   <div>
     <div class="header">
       <div class="search">
-        <span class="input"><el-input v-model="search" placeholder="请输入内容" /></span>
-        <span><el-button type="primary" @click="handleSearch">搜索</el-button></span>
+        <span class="input">
+          <el-input
+            v-model="search"
+            placeholder="请输入内容"
+          />
+        </span>
+        <span>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >搜索</el-button>
+        </span>
       </div>
       <div class="date">
         <el-date-picker
@@ -18,7 +28,12 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" label="" width="50" fixed>
+      <el-table-column
+        align="center"
+        label=""
+        width="50"
+        fixed
+      >
         <template slot-scope="scope">
           {{ scope.$index+1 }}
         </template>
@@ -77,8 +92,16 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleCheck(scope.row)"
+          >查看</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleDelete(scope.row)"
+          >移除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -121,16 +144,26 @@
           </div>
           <div class="dia_item">
             <span>菜图:</span>
-            <span><img :src="menuDtail.ID" alt=""></span>
+            <span>
+              <img
+                :src="menuDtail.ID"
+                alt=""
+              ></span>
           </div>
           <div class="dia_item">
             <span>日期:</span>
             <span>{{ menuDtail.ID }}</span>
           </div>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="diaClose">确 定</el-button>
+          <el-button
+            type="primary"
+            @click="diaClose"
+          >确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -202,28 +235,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .header{
-    display:flex;
-    margin: 10px 1rem;
-    justify-content:space-between;
-    .search{
-      display: flex;
-      .input{
-        width: 20rem;
-        margin-right: 2rem;
-      }
-    }
-    .date{
+.header {
+  display: flex;
+  margin: 10px 1rem;
+  justify-content: space-between;
+  .search {
+    display: flex;
+    .input {
+      width: 20rem;
+      margin-right: 2rem;
     }
   }
-  .dialog{
-    .dia_item{
-      margin-top: 15px;
-    }
+}
+.dialog {
+  .dia_item {
+    margin-top: 15px;
   }
-  .tips{
-    margin: 10px 0 0 2rem;
-    color: grey;
-  }
-
+}
+.tips {
+  margin: 10px 0 0 2rem;
+  color: grey;
+}
 </style>

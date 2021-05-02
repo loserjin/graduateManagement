@@ -4,7 +4,7 @@ import store from '@/store'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
-  timeout: 5000,
+  timeout: 10000,
   withCredentials: true
 })
 
@@ -23,18 +23,22 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code !== 200) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 10 * 1000
-      })
+      // Message({
+      //   message: res.message || 'Error',
+      //   type: 'error',
+      //   duration: 10 * 1000
+      // })
 
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('你已经处于非登录状态，请重新登录', '确定退出登录？', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+        MessageBox.confirm(
+          '你已经处于非登录状态，请重新登录',
+          '确定退出登录？',
+          {
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
           store.dispatch('user/resetToken').then(() => {
             location.reload()
           })
@@ -52,11 +56,6 @@ service.interceptors.response.use(
     }
   },
   error => {
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 8 * 1000
-    })
     return Promise.reject(error)
   }
 )

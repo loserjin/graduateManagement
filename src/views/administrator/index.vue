@@ -2,11 +2,27 @@
   <div>
     <div class="header">
       <div class="search">
-        <span class="input"><el-input v-model="search" placeholder="请输入管理员姓名" @change="inputChange" /></span>
-        <span><el-button type="primary" @click="handleSearch">搜索</el-button></span>
+        <span class="input">
+          <el-input
+            v-model="search"
+            placeholder="请输入管理员姓名"
+            @change="inputChange"
+          />
+        </span>
+        <span>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >搜索</el-button>
+        </span>
       </div>
       <div>
-        <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
+        <span>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >新增</el-button>
+        </span>
       </div>
     </div>
     <el-table
@@ -15,7 +31,12 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" label="" width="50" fixed>
+      <el-table-column
+        align="center"
+        label=""
+        width="50"
+        fixed
+      >
         <template slot-scope="scope">
           {{ scope.$index+1 }}
         </template>
@@ -67,13 +88,23 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
-          <el-button type="text" size="small" @click="handleChange(scope.row)">修改</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleCheck(scope.row)"
+          >查看</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleChange(scope.row)"
+          >修改</el-button>
           <template>
-            <el-popconfirm
-              title="您确定删除该管理员吗？"
-            >
-              <el-button slot="reference" type="text" @click="handleDelete(scope.row)">删除</el-button>
+            <el-popconfirm title="您确定删除该管理员吗？">
+              <el-button
+                slot="reference"
+                type="text"
+                @click="handleDelete(scope.row)"
+              >删除</el-button>
             </el-popconfirm>
           </template>
         </template>
@@ -87,53 +118,140 @@
         width="50%"
       >
         <div>
-          <el-form ref="form" :model="form">
-            <el-form-item label="ID" label-width="120px">
-              <el-input v-model="form.adminId" :disabled="isCheck" />
+          <el-form
+            ref="form"
+            :model="form"
+          >
+            <el-form-item
+              label="ID"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminId"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="姓名" label-width="120px">
-              <el-input v-model="form.adminName" :disabled="isCheck" />
+            <el-form-item
+              label="姓名"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminName"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="性别" label-width="120px">
-              <el-input v-model="form.adminSex" :disabled="isCheck" />
+            <el-form-item
+              label="性别"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminSex"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="邮箱" label-width="120px">
-              <el-input v-model="form.adminEmail" :disabled="isCheck" />
+            <el-form-item
+              label="邮箱"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminEmail"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="密码" label-width="120px">
-              <el-input v-model="form.adminPwd" :disabled="isCheck" />
+            <el-form-item
+              label="密码"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminPwd"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="身份证号码" label-width="120px">
-              <el-input v-model="form.adminIdcard" :disabled="isCheck" />
+            <el-form-item
+              label="身份证号码"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminIdcard"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="管理员类型" label-width="120px">
-              <el-input v-model="form.adminRole" :disabled="isCheck" />
+            <el-form-item
+              label="管理员类型"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminRole"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="所属餐厅" label-width="120px">
-              <el-input v-model="form.departmentName" :disabled="isCheck" />
+            <el-form-item
+              label="所属餐厅"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.departmentName"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="所属餐厅楼层" label-width="120px">
-              <el-input v-model="form.departmentFoor" :disabled="isCheck" />
+            <el-form-item
+              label="所属餐厅楼层"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.departmentFoor"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="所属餐厅楼层ID" label-width="120px">
-              <el-input v-model="form.departmentfloorId" :disabled="isCheck" />
+            <el-form-item
+              label="所属餐厅楼层ID"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.departmentfloorId"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="所属餐厅楼层名称" label-width="120px">
-              <el-input v-model="form.departmentfloorName" :disabled="isCheck" />
+            <el-form-item
+              label="所属餐厅楼层名称"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.departmentfloorName"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="联系方式" label-width="120px">
-              <el-input v-model="form.adminTel" :disabled="isCheck" />
+            <el-form-item
+              label="联系方式"
+              label-width="120px"
+            >
+              <el-input
+                v-model="form.adminTel"
+                :disabled="isCheck"
+              />
             </el-form-item>
             <template v-if="regTimeShow">
-              <el-form-item label="注册时间" label-width="120px">
-                <el-input v-model="form.adminCreatime" :disabled="isCheck" />
+              <el-form-item
+                label="注册时间"
+                label-width="120px"
+              >
+                <el-input
+                  v-model="form.adminCreatime"
+                  :disabled="isCheck"
+                />
               </el-form-item>
             </template>
           </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="changeCheckVisible = false">取 消</el-button>
-          <el-button type="primary" @click="changeCheckDiaClose">确 定</el-button>
+          <el-button
+            type="primary"
+            @click="changeCheckDiaClose"
+          >确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -287,18 +405,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.header{
-    display:flex;
-    margin: 10px 1rem;
-    justify-content:space-between;
-    .search{
-      display: flex;
-      .input{
-        width: 20rem;
-        margin-right: 2rem;
-      }
-    }
-    .date{
+.header {
+  display: flex;
+  margin: 10px 1rem;
+  justify-content: space-between;
+  .search {
+    display: flex;
+    .input {
+      width: 20rem;
+      margin-right: 2rem;
     }
   }
+}
 </style>

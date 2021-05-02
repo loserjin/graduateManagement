@@ -2,58 +2,89 @@
   <div>
     <div class="header">
       <div class="search">
-        <span class="input"><el-input v-model="input" placeholder="请输入内容" /></span>
-        <span><el-button type="primary" @click="handleSearch">搜索</el-button></span>
+        <span class="input">
+          <el-input
+            v-model="input"
+            placeholder="请输入菜系类型ID"
+            @onChange="inputChange"
+          />
+        </span>
+        <span>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >搜索</el-button>
+        </span>
       </div>
       <div>
-        <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
-      </div>
-      <div class="date">
-        <el-date-picker
-          v-model="date"
-          type="date"
-          placeholder="选择日期"
-        />
+        <span>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >新增</el-button>
+        </span>
       </div>
     </div>
     <div class="dialog">
       <el-dialog
-        title="修改食材订单信息"
+        :title="diaTitle"
         :visible.sync="changeVisible"
         width="50%"
         :before-close="handleClose"
       >
         <div>
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="饭堂ID">
-              <el-input v-model="form.name" />
+          <el-form
+            ref="changeForm"
+            label-width="120px"
+            :model="form"
+          >
+            <el-form-item
+              v-if="isChange"
+              label="类型ID"
+              prop="typeId"
+              :rules="[{ required: true, message: '类型ID不能为空' }]"
+            >
+              <el-input
+                v-model.number="form.typeId"
+                disabled
+              />
             </el-form-item>
-            <el-form-item label="楼层">
-              <el-input v-model="form.name" />
+            <el-form-item
+              label="类型名称"
+              prop="typeName"
+              :rules="[{ required: true, message: '类型名称不能为空' }]"
+            >
+              <el-input v-model="form.typeName" />
             </el-form-item>
-            <el-form-item label="类别">
-              <el-input v-model="form.name" />
+            <el-form-item
+              label="饭堂ID"
+              prop="ID"
+            >
+              <el-input v-model.number="form.departmentId" />
             </el-form-item>
-            <el-form-item label="材料名称">
-              <el-input v-model="form.name" />
+            <el-form-item
+              label="饭堂名称"
+              prop="name"
+            >
+              <el-input v-model="form.departmentName" />
             </el-form-item>
-            <el-form-item label="材料数量">
-              <el-input v-model="form.name" />
+            <el-form-item label="楼层ID">
+              <el-input v-model.number="form.departmentfloorId" />
             </el-form-item>
-            <el-form-item label="单价">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="总价">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="日期">
-              <el-input v-model="form.name" />
+            <el-form-item label="楼层名称">
+              <el-input v-model="form.departmentfloorName" />
             </el-form-item>
           </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="changeVisible = false">取 消</el-button>
-          <el-button type="primary" @click="changeDialogClose">确 定</el-button>
+          <el-button
+            type="primary"
+            @click="changeDialogClose('changeForm')"
+          >确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -63,7 +94,12 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" label="" width="50" fixed>
+      <el-table-column
+        align="center"
+        label=""
+        width="50"
+        fixed
+      >
         <template slot-scope="scope">
           {{ scope.$index+1 }}
         </template>
@@ -108,29 +144,46 @@
         label="管理员名称"
         align="center"
       />
-      <el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+      >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleChange(scope.row,'changeForm')"
+          >修改</el-button>
+          <el-button
+            type="text"
+            class="delete_btn"
+            @click="handleDelete(scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div class="tips">默认显示最新食材进货数据，可根据日期选择当天食材进货数据</div>
   </div>
 </template>
 
 <script>
-import { getMenuType } from '@/api/menuType.js'
+import { getMenusType, changeMenuType, deleteMenuType } from '@/api/menuType.js'
 export default {
 
   data() {
     return {
-      date: '',
+      diaTitle: '',
       form: {
-        name: ''
+        typeId: '',
+        typeName: '',
+        departmentId: '',
+        departmentName: '',
+        departmentfloorId: '',
+        departmentfloorName: ''
       },
       input: '',
       isAdd: false,
+      isChange: false,
+      visible: false,
       changeVisible: false,
       tableData: [],
       loading: false
@@ -140,55 +193,126 @@ export default {
     this.getData()
   },
   methods: {
-    async getData() {
+    async getData(data) {
       this.loading = true
-      await getMenuType().then(response => {
+      await getMenusType(data ? { adminId: data } : null).then(response => {
         this.tableData = response.data.records
       })
       this.loading = false
     },
-    changeDialogClose() {
+    changeDialogClose(changeForm) {
+      this.$refs[changeForm].validate((valid) => {
+        if (valid) {
+          const { typeName, departmentId, departmentNamem, departmentfloorId, departmentfloorName } = this.form
+          const data = { typeName, departmentId, departmentNamem, departmentfloorId, departmentfloorName }
+          changeMenuType(data).then(res => {
+            if (res.code === 200) {
+              this.$message('新增成功！')
+            }
+          })
+          this.changeVisible = false
+        }
+      })
+    },
+    handleChange(row, changeForm) {
+      this.diaTitle = '修改菜系信息'
+      this.form = row
+      this.changeVisible = true
+      this.isChange = true
+      this.$refs[changeForm].validate((valid) => {
+        if (valid) {
+          const { typeName, departmentId, departmentNamem, departmentfloorId, departmentfloorName, typeId } = this.form
+          const data = { typeName, departmentId, departmentNamem, departmentfloorId, departmentfloorName, typeId }
+          changeMenuType(data).then(res => {
+            if (res.code === 200) {
+              this.$message({
+                message: '修改成功！',
+                type: 'success'
+              })
+            }
+          }).catch(() => {
+            this.$message({
+              message: '修改失败，请稍后重试！',
+              type: 'warning'
+            })
+          })
+          this.changeVisible = false
+        }
+      })
+    },
+    handleClose() {
       this.changeVisible = false
+      this.isAdd = false
+      this.isChange = false
     },
-
-    handleClick(row) {
-      this.changeVisible = true
-      console.log(row)
-    },
-
     handleAdd() {
-      this.changeVisible = true
       this.isAdd = true
-      console.log('d')
+      this.diaTitle = '新增菜系'
+      this.form = {
+        typeId: '',
+        typeName: '',
+        departmentId: '',
+        departmentName: '',
+        departmentfloorId: '',
+        departmentfloorName: ''
+      }
+      this.changeVisible = true
     },
 
     handleSearch() {
-
+      if (this.input) {
+        this.getData(this.input)
+      }
     },
-
-    hanldeDelete(row) {
-
+    inputChange() {
+      if (!this.input && this.tableData.length <= 1) {
+        this.getData()
+      }
+    },
+    handleDelete(row) {
+      this.$alert('确定删除该菜系？', '', {
+        confirmButtonText: '确定删除',
+        distinguishCancelAndClose: true,
+        type: 'warning',
+        center: true,
+        callback: action => {
+          if (action === 'confirm') {
+            deleteMenuType({ typeId: +row.typeId }).then(res => {
+              if (res.code === 200) {
+                this.$message({
+                  message: '删除成功！',
+                  type: 'success'
+                })
+                this.getData()
+              }
+            }).catch(() => {
+              this.$message({
+                message: '删除失败！',
+                type: 'warning'
+              })
+            })
+            this.visible = false
+          }
+        }
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
- .header{
-    display:flex;
-    margin: 10px 1rem;
-    justify-content:space-between;
-    .search{
-      display: flex;
-      .input{
-        width: 20rem;
-        margin-right: 2rem;
-      }
-    }
-    .date{
+.header {
+  display: flex;
+  margin: 10px 1rem;
+  justify-content: space-between;
+  .search {
+    display: flex;
+    .input {
+      width: 20rem;
+      margin-right: 2rem;
     }
   }
-  .tips{
-    margin-left: 2rem;
-    color:grey;
-  }
+}
+.delete_btn {
+  color: red;
+}
 </style>

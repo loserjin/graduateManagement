@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="header">
-      <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
+      <span>
+        <el-button
+          type="primary"
+          @click="handleAdd"
+        >新增</el-button>
+      </span>
     </div>
     <div class="dialog">
       <el-dialog
@@ -11,7 +16,11 @@
         :before-close="handleClose"
       >
         <div>
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form
+            ref="form"
+            :model="form"
+            label-width="80px"
+          >
             <el-form-item label="饭堂ID">
               <el-input v-model="form.name" />
             </el-form-item>
@@ -38,9 +47,15 @@
             </el-form-item>
           </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="changeVisible = false">取 消</el-button>
-          <el-button type="primary" @click="changeDialogClose">确 定</el-button>
+          <el-button
+            type="primary"
+            @click="changeDialogClose"
+          >确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -50,7 +65,12 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" label="" width="50" fixed>
+      <el-table-column
+        align="center"
+        label=""
+        width="50"
+        fixed
+      >
         <template slot-scope="scope">
           {{ scope.$index+1 }}
         </template>
@@ -87,8 +107,16 @@
       />
       <el-table-column>
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleClick(scope.row)"
+          >修改</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleDelete(scope.row)"
+          >移除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,15 +134,21 @@ export default {
       },
       isAdd: false,
       changeVisible: false,
-      tableData: []
+      tableData: [],
+      loading: false
     }
   },
   mounted() {
-    getBurdenList().then(response => {
-      this.tableData = response.data.records
-    })
+    this.getData()
   },
   methods: {
+    async getData() {
+      this.loading = true
+      await getBurdenList().then(response => {
+        this.tableData = response.data.records
+      })
+      this.loading = false
+    },
     changeDialogClose() {
       this.changeVisible = false
     },
@@ -136,8 +170,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
- .header{
-   text-align: right;
-   margin:10px 80px;
-  }
+.header {
+  text-align: right;
+  margin: 10px 80px;
+}
 </style>
