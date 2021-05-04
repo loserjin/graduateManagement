@@ -1,9 +1,17 @@
 import request from '@/utils/request'
 
-// 获取食材进货数据
+// 获取全部食材进货数据
 export function getMaterialList(data) {
   return request({
     url: '/purchase/infos',
+    method: 'GET'
+  })
+}
+
+// 获取单个食材进货数据
+export function getMaterial(data) {
+  return request({
+    url: '/purchase/info',
     method: 'GET'
   })
 }
@@ -12,15 +20,17 @@ export function getMaterialList(data) {
 export function addMaterial(data) {
   return request({
     url: '/purchase/edit',
-    method: ''
+    method: 'POST',
+    data
   })
 }
 
 // 修改食材进货数据
 export function changeMaterial(data) {
   return request({
-    url: '',
-    method: ''
+    url: '/purchase/edit',
+    method: 'POST',
+    data
   })
 }
 
@@ -28,14 +38,16 @@ export function changeMaterial(data) {
 export function deleteMaterial(data) {
   return request({
     url: '/purchase/delect',
-    method: ''
+    method: 'POST',
+    data
   })
 }
 
-// 食材模糊搜索
+// 食材搜索
 export function searchMaterial(data) {
   return request({
-    url: '',
-    method: ''
+    url: 'purchase/info',
+    method: 'GET',
+    params: data
   })
 }

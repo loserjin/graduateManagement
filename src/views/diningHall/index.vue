@@ -2,7 +2,12 @@
   <div>
     <div class="header">
       <div>
-        <span><el-button type="primary" @click="handleAdd">新增</el-button></span>
+        <span>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >新增</el-button>
+        </span>
       </div>
     </div>
     <div class="dialog">
@@ -13,19 +18,44 @@
         :before-close="handleClose"
       >
         <div>
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item v-if="isAdd==false" label="饭堂ID">
-              <el-input v-model="form.departmentId" :disabled="disable" />
+          <el-form
+            ref="form"
+            :model="form"
+            label-width="80px"
+          >
+            <el-form-item
+              v-if="isAdd==false"
+              label="饭堂ID"
+            >
+              <el-input
+                v-model="form.departmentId"
+                disabled
+              />
             </el-form-item>
-            <el-form-item label="饭堂名称">
-              <el-input v-model="form.departmentName" :disabled="disable" />
+            <el-form-item
+              label="饭堂名称"
+              prop="departmentName"
+              :rules="[
+                {required: true, message: '饭堂名称不可为空'}
+              ]"
+            >
+              <el-input
+                v-model.trim="form.departmentName"
+                :disabled="disable"
+              />
             </el-form-item>
 
           </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="changeVisible = false">取 消</el-button>
-          <el-button type="primary" @click="changeDialogClose">确 定</el-button>
+          <el-button
+            type="primary"
+            @click="changeDialogClose"
+          >确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -35,7 +65,12 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" label="" width="50" fixed>
+      <el-table-column
+        align="center"
+        label=""
+        width="50"
+        fixed
+      >
         <template slot-scope="scope">
           {{ scope.$index+1 }}
         </template>
@@ -57,19 +92,46 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleEdit(scope.row)"
+          >编辑</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleCheck(scope.row)"
+          >查看</el-button>
           <template>
             <el-popconfirm
               title="您确定删除该饭堂吗？"
               @onConfirm="handleDelete(scope.row)"
             >
-              <el-button slot="reference" type="text">删除</el-button>
+              <el-button
+                slot="reference"
+                type="text"
+                class="deleteBtn"
+              >删除</el-button>
             </el-popconfirm>
           </template>
         </template>
       </el-table-column>
     </el-table>
+    <div
+      class="pagination"
+      style="width: 50%;margin: 10px auto;text-align:center;font-size:1.1rem"
+    >
+      <el-pagination
+        v-if="total"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="5"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -90,6 +152,9 @@ export default {
       title: '',
       changeVisible: false,
       tableData: [],
+      total: 0,
+      currentPage: 1,
+      pageSize: 5,
       loading: false
     }
   },
@@ -101,33 +166,48 @@ export default {
       this.loading = true
       await getDiningHall().then(response => {
         this.tableData = response.data.records
+        this.total = response?.data?.total || 0
       })
       this.loading = false
     },
     changeDialogClose() {
-      if (this.isAdd) {
-        addDiningHall({ departmentName: this.form.departmentName }).then(res => {
-          if (res.code === 200) {
-            this.$message('新增成功')
-            this.getDiningHallList()
-          } else {
-            this.$message('新增失败，请重试')
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isAdd) {
+            addDiningHall({ departmentName: this.form.departmentName }).then(res => {
+              if (res.code === 200) {
+                this.$message({
+                  showClose: true,
+                  message: '新增成功',
+                  type: 'success'
+                })
+                this.getDiningHallList()
+              } else {
+                this.$message.error('新增失败，请重试')
+              }
+            })
+          } else if (this.isEdit) {
+            addDiningHall(this.form).then(res => {
+              if (res.code === 200) {
+                this.$message({
+                  showClose: true,
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.getDiningHallList()
+              } else {
+                this.$message.error('修改失败，请重试')
+              }
+            })
           }
-        })
-      } else if (this.isEdit) {
-        addDiningHall(this.form).then(res => {
-          if (res.code === 200) {
-            this.$message('修改成功')
-            this.getDiningHallList()
-          } else {
-            this.$message('修改失败，请重试')
-          }
-        })
-      }
-      this.changeVisible = false
-      this.isEdit = false
-      this.isAdd = false
-      this.isCheck = false
+          this.changeVisible = false
+          this.isEdit = false
+          this.isAdd = false
+          this.isCheck = false
+        } else {
+          return false
+        }
+      })
     },
     handleEdit(row) {
       this.changeVisible = true
@@ -156,10 +236,14 @@ export default {
       console.log(row)
       deleteDiningHall({ departmentId: row.departmentId }).then(res => {
         if (res.code === 200) {
-          this.$message('删除成功')
+          this.$message({
+            showClose: true,
+            message: '删除成功',
+            type: 'success'
+          })
           this.getDiningHallList()
         } else {
-          this.$message('删除失败，请重试')
+          this.$message.error('删除失败，请重试')
         }
       })
     },
@@ -168,14 +252,54 @@ export default {
       this.isEdit = false
       this.isAdd = false
       this.isCheck = false
+    },
+    async changeData(current, size, input) {
+      this.loading = true
+      if (input) {
+        await getDiningHall({ current, size, text: input }).then(res => {
+          this.tableData = res.data.records
+          this.total = res?.data?.total || 0
+        })
+        this.loading = false
+        return
+      }
+
+      await getDiningHall({ current, size }).then(res => {
+        this.tableData = res.data.records
+        this.total = res?.data?.total || 0
+      })
+      this.loading = false
+    },
+    diaClose() {
+      this.userDetail = false
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      if (this.input) {
+        this.changeData(this.currentPage, val, this.input)
+        return
+      }
+      this.changeData(this.currentPage, val)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      if (this.input) {
+        this.changeData(this.currentPage, val, this.input)
+        return
+      }
+      this.changeData(val, this.pageSize)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
- .header{
-   text-align: right;
-   margin:10px 80px;
-  }
+.header {
+  text-align: right;
+  margin: 10px 80px;
+}
+.deleteBtn {
+  margin-left: 10px;
+  color: red;
+}
 </style>

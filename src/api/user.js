@@ -1,32 +1,10 @@
 import request from '@/utils/request'
 
-export function login(data) {
+// 获取用户列表
+export function getUserList(data) {
   return request({
-    url: '/vue-admin-template/user/login',
-    method: 'post',
-    data
-  })
-}
-
-export function getInfo(params) {
-  return request({
-    url: '/admin/info',
+    url: '/user/infos',
     method: 'GET',
-    params: { params }
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/logout',
-    method: 'GET'
-  })
-}
-
-// 查看用户信息
-export function checkUserInfo(data) {
-  return request({
-    url: '',
-    method: ''
+    params: data
   })
 }

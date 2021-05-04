@@ -1,6 +1,20 @@
 <template>
   <div>
     <div class="header">
+      <div class="search">
+        <span class="input">
+          <el-input
+            v-model="input"
+            placeholder="请输入配料ID"
+          />
+        </span>
+        <span>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >搜索</el-button>
+        </span>
+      </div>
       <span>
         <el-button
           type="primary"
@@ -10,7 +24,7 @@
     </div>
     <div class="dialog">
       <el-dialog
-        title="修改食材订单信息"
+        :title="title"
         :visible.sync="changeVisible"
         width="50%"
         :before-close="handleClose"
@@ -19,31 +33,35 @@
           <el-form
             ref="form"
             :model="form"
-            label-width="80px"
+            label-width="120px"
           >
-            <el-form-item label="饭堂ID">
-              <el-input v-model="form.name" />
+            <el-form-item
+              v-if="isChange"
+              label="材料ID"
+            >
+              <el-input
+                v-model="form.componentId"
+                disabled
+              />
             </el-form-item>
-            <el-form-item label="楼层">
-              <el-input v-model="form.name" />
+            <el-form-item
+              label="材料名称"
+              prop="componentName"
+              :rules="[
+                {required: true,message: '材料名称不能为空'}
+              ]"
+            >
+              <el-input v-model.trim="form.componentName" />
             </el-form-item>
-            <el-form-item label="类别">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="材料名称">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="材料数量">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="单价">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="总价">
-              <el-input v-model="form.name" />
-            </el-form-item>
-            <el-form-item label="日期">
-              <el-input v-model="form.name" />
+            <el-form-item
+              label="材料价格(元)"
+              prop="componentMoney"
+              :rules="[
+                {required: true,message: '材料价格不能为空'},
+                { type: 'number', message: '材料价格必须为数字值'}
+              ]"
+            >
+              <el-input v-model.number.trim="form.componentMoney" />
             </el-form-item>
           </el-form>
         </div>
@@ -67,8 +85,8 @@
     >
       <el-table-column
         align="center"
-        label=""
-        width="50"
+        label="序号"
+        width="60"
         fixed
       >
         <template slot-scope="scope">
@@ -105,26 +123,45 @@
         label="管理员名称"
         align="center"
       />
-      <el-table-column>
+      <el-table-column
+        align="center"
+        label="操作"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
             size="small"
-            @click="handleClick(scope.row)"
+            @click="handleChange(scope.row)"
           >修改</el-button>
           <el-button
             type="text"
             size="small"
+            class="delete_btn"
             @click="handleDelete(scope.row)"
           >移除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <div
+      class="pagination"
+      style="width: 50%;margin: 10px auto;text-align:center;font-size:1.1rem"
+    >
+      <el-pagination
+        v-if="total"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="5"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import { getBurdenList } from '@/api/burdenSheet.js'
+import { getBurdenList, changeBurden, deleteBurden } from '@/api/burdenSheet.js'
 export default {
 
   data() {
@@ -133,8 +170,14 @@ export default {
         name: ''
       },
       isAdd: false,
+      isChange: false,
+      input: '',
+      title: '',
       changeVisible: false,
       tableData: [],
+      total: 0,
+      currentPage: 1,
+      pageSize: 5,
       loading: false
     }
   },
@@ -144,34 +187,152 @@ export default {
   methods: {
     async getData() {
       this.loading = true
-      await getBurdenList().then(response => {
-        this.tableData = response.data.records
-      })
+      try {
+        await getBurdenList().then(response => {
+          this.tableData = response.data.records
+          this.total = response.data.total
+          this.loading = false
+        })
+      } catch {
+        this.loading = false
+        return false
+      }
       this.loading = false
     },
     changeDialogClose() {
-      this.changeVisible = false
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          changeBurden(this.form).then(res => {
+            this.getData()
+            this.$message({
+              showClose: true,
+              message: '变更成功！',
+              type: 'success'
+            })
+          }).catch(() => {
+            this.$message.error('变更失败！')
+          })
+          this.changeVisible = false
+          this.isAdd = false
+          this.isChange = false
+        }
+      })
     },
-
-    handleClick(row) {
+    handleSearch() {
+      if (this.input) {
+        try {
+          this.loading = true
+          getBurdenList({ componentId: this.input }).then(response => {
+            this.tableData = response.data.records
+            this.total = response.data.total
+          })
+        } catch {
+          return false
+        }
+        this.loading = false
+      } else {
+        this.$message({
+          message: '请输入配料id',
+          type: 'warning'
+        })
+      }
+    },
+    handleChange(row) {
+      this.title = '修改菜谱配料信息'
+      this.form = row
+      this.isChange = true
       this.changeVisible = true
-      console.log(row)
     },
 
     handleAdd() {
+      this.title = '修改食材订单信息'
+      this.form = {
+        componentName: '',
+        componentMoney: ''
+      }
       this.changeVisible = true
       this.isAdd = true
-      console.log('d')
     },
-    hanldeDelete(row) {
+    handleClose() {
+      this.changeVisible = false
+      this.isAdd = false
+      this.isChange = false
+    },
+    handleDelete(row) {
+      this.$confirm('此操作将删除该配料信息, 是否继续?', '提示', {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteBurden({ componentId: row.componentId }).then(() => {
+          this.getData()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '删除失败！'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    async changeData(current, size, input) {
+      this.loading = true
+      if (input) {
+        await getBurdenList({ current, size, text: input }).then(res => {
+          this.tableData = res.data.records
+          this.total = res?.data?.total || 0
+        })
+        this.loading = false
+        return
+      }
 
+      await getBurdenList({ current, size }).then(res => {
+        this.tableData = res.data.records
+        this.total = res?.data?.total || 0
+      })
+      this.loading = false
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      if (this.input) {
+        this.changeData(this.currentPage, val, this.input)
+        return
+      }
+      this.changeData(this.currentPage, val)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      if (this.input) {
+        this.changeData(this.currentPage, val, this.input)
+        return
+      }
+      this.changeData(val, this.pageSize)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .header {
-  text-align: right;
-  margin: 10px 80px;
+  display: flex;
+  margin: 10px 1rem;
+  justify-content: space-between;
+  .search {
+    display: flex;
+    .input {
+      width: 20rem;
+      margin-right: 2rem;
+    }
+  }
+}
+.delete_btn {
+  color: red;
 }
 </style>

@@ -1,5 +1,5 @@
-import { getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getAdminInfo } from '@/api/administrator.js'
+import { setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { login, logout } from '@/api/administrator.js'
 
@@ -15,7 +15,7 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const mutations = {
-  RESET_STATE: (state) => {
+  RESET_STATE: state => {
     Object.assign(state, getDefaultState())
   },
   SET_TOKEN: (state, token) => {
@@ -30,7 +30,6 @@ const mutations = {
   SET_ADMINID: (state, adminId) => {
     state.adminId = adminId
   }
-
 }
 
 const actions = {
@@ -38,53 +37,58 @@ const actions = {
   login({ commit }, userInfo) {
     const { adminName, adminPwd, adminRole } = userInfo
     return new Promise((resolve, reject) => {
-      login({ adminName: adminName.trim(), adminPwd: adminPwd.trim(), adminRole: adminRole }).then(response => {
-        const { res, token } = response
-        sessionStorage.setItem('token', token)
-        sessionStorage.setItem('adminId', res.data.adminId)
-        sessionStorage.setItem('adminName', res.data.adminName)
-        commit('SET_TOKEN', token)
-        commit('SET_ADMINID', res.data.adminId)
-        commit('SET_NAME', res.data.adminName)
-        setToken(token)
-        resolve()
-      }).catch(error => {
-        reject(error)
+      login({
+        adminName: adminName.trim(),
+        adminPwd: adminPwd.trim(),
+        adminRole: adminRole
       })
+        .then(response => {
+          const { res, token } = response
+          sessionStorage.setItem('token', token)
+          sessionStorage.setItem('adminId', res.data.adminId)
+          sessionStorage.setItem('adminName', res.data.adminName)
+          sessionStorage.setItem('personalMess', res.data)
+          commit('SET_TOKEN', token)
+          commit('SET_ADMINID', res.data.adminId)
+          commit('SET_NAME', res.data.adminName)
+          setToken(token)
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
     })
   },
 
   // get user info
   getInfo({ commit, state }) {
+    const personalMess = sessionStorage.getItem('personalMess')
     return new Promise((resolve, reject) => {
-      getInfo(state.adminId).then(response => {
-        const { data } = this.$store.getters
-        if (!data) {
-          return reject('账号密码错误，请重新登录.')
-        }
-        const { name, avatar, adminId } = data
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_ADMINID', adminId)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
+      const { adminId, adminRole, adminName } = personalMess
+      const data = { adminId, adminRole, adminName }
+      commit('SET_NAME', adminName)
+      commit('SET_ADMINID', adminId)
+      resolve(data)
     })
   },
 
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout().then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        sessionStorage.removeItem('token')
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      logout()
+        .then(() => {
+          removeToken() // must remove  token  first
+          resetRouter()
+          sessionStorage.removeItem('token')
+          sessionStorage.removeItem('adminId')
+          sessionStorage.removeItem('adminName')
+          sessionStorage.removeItem('personalMess')
+          commit('RESET_STATE')
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
     })
   },
 
@@ -104,4 +108,3 @@ export default {
   mutations,
   actions
 }
-

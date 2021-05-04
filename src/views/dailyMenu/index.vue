@@ -167,13 +167,15 @@
         </span>
       </el-dialog>
     </div>
-    <div class="tips">默认显示最新菜谱，可根据日期选择当天菜谱</div>
+    <WordTips />
   </div>
 </template>
 
 <script>
+import WordTips from '@/components/tips/index'
 import { getMaterialList, addMaterial, deleteMaterial, searchMaterial } from '@/api/dailyMenu.js'
 export default {
+  components: { WordTips },
   data() {
     return {
       search: '',

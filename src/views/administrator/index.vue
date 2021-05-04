@@ -49,7 +49,7 @@
       />
       <el-table-column
         prop="adminName"
-        label="姓名"
+        label="用户名"
         width="120"
         align="center"
       />
@@ -103,6 +103,7 @@
               <el-button
                 slot="reference"
                 type="text"
+                class="deleteBtn"
                 @click="handleDelete(scope.row)"
               >删除</el-button>
             </el-popconfirm>
@@ -110,6 +111,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination">
+      <el-pagination
+        v-if="total"
+        background
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 35]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
 
     <div class="dialog">
       <el-dialog
@@ -121,123 +134,188 @@
           <el-form
             ref="form"
             :model="form"
+            label-width="140px"
           >
             <el-form-item
               label="ID"
-              label-width="120px"
+              prop="adminId"
+              :rules="[
+                { required: true, message: 'ID不能为空'},
+                { type: 'number', message: 'ID必须为数字值'}
+              ]"
             >
               <el-input
-                v-model="form.adminId"
+                v-model.number.trim="form.adminId"
                 :disabled="isCheck"
               />
             </el-form-item>
             <el-form-item
               label="姓名"
-              label-width="120px"
+              prop="adminName"
+              :rules="[
+                { required: true, message: '姓名不能为空'},
+              ]"
             >
               <el-input
-                v-model="form.adminName"
+                v-model.trim="form.adminName"
                 :disabled="isCheck"
               />
             </el-form-item>
             <el-form-item
               label="性别"
-              label-width="120px"
+              prop="adminSex"
+              :rules="[
+                { required: true, message: '性别必选'},
+              ]"
             >
-              <el-input
+              <el-radio-group
                 v-model="form.adminSex"
                 :disabled="isCheck"
-              />
+              >
+                <el-radio
+                  label="男"
+                  value="男"
+                />
+                <el-radio
+                  label="女"
+                  value="女"
+                />
+              </el-radio-group>
             </el-form-item>
             <el-form-item
               label="邮箱"
-              label-width="120px"
+              props="adminEmail"
+              :rules="[
+                { validator: emailValidator, trigger: 'blur'}
+              ]"
             >
               <el-input
-                v-model="form.adminEmail"
+                v-model.trim="form.adminEmail"
                 :disabled="isCheck"
               />
             </el-form-item>
             <el-form-item
+              prop="adminPwd"
+              :rules="[
+                { required: true, message: '密码不能为空'},
+              ]"
               label="密码"
-              label-width="120px"
             >
               <el-input
-                v-model="form.adminPwd"
+                v-model.trim="form.adminPwd"
                 :disabled="isCheck"
+                placeholder="密码需包括字母数字"
               />
             </el-form-item>
             <el-form-item
+              prop="adminIdcard"
+              :rules="[
+                { required: true, message: '身份证号码不能为空'},
+                { validator: cardValidator, trigger: 'blur'}
+              ]"
               label="身份证号码"
-              label-width="120px"
             >
               <el-input
-                v-model="form.adminIdcard"
+                v-model.trim="form.adminIdcard"
                 :disabled="isCheck"
               />
             </el-form-item>
             <el-form-item
+              prop="adminRole"
+              :rules="[
+                { required: true, message: '管理员类型必选'},
+              ]"
               label="管理员类型"
-              label-width="120px"
             >
-              <el-input
+              <el-select
                 v-model="form.adminRole"
+                prop="adminId"
                 :disabled="isCheck"
-              />
-            </el-form-item>
-            <el-form-item
-              label="所属餐厅"
-              label-width="120px"
-            >
-              <el-input
-                v-model="form.departmentName"
-                :disabled="isCheck"
-              />
-            </el-form-item>
-            <el-form-item
-              label="所属餐厅楼层"
-              label-width="120px"
-            >
-              <el-input
-                v-model="form.departmentFoor"
-                :disabled="isCheck"
-              />
-            </el-form-item>
-            <el-form-item
-              label="所属餐厅楼层ID"
-              label-width="120px"
-            >
-              <el-input
-                v-model="form.departmentfloorId"
-                :disabled="isCheck"
-              />
-            </el-form-item>
-            <el-form-item
-              label="所属餐厅楼层名称"
-              label-width="120px"
-            >
-              <el-input
-                v-model="form.departmentfloorName"
-                :disabled="isCheck"
-              />
-            </el-form-item>
-            <el-form-item
-              label="联系方式"
-              label-width="120px"
-            >
-              <el-input
-                v-model="form.adminTel"
-                :disabled="isCheck"
-              />
-            </el-form-item>
-            <template v-if="regTimeShow">
-              <el-form-item
-                label="注册时间"
-                label-width="120px"
+                placeholder="请选择"
               >
+                <el-option
+                  label="普通管理员"
+                  :value="0"
+                />
+                <el-option
+                  v-if="isCheck"
+                  :value="1"
+                  label="超级管理员"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              prop="departmentName"
+              :rules="[
+                { required: true, message: '所属餐厅名称不能为空'},
+              ]"
+              label="所属餐厅名称"
+            >
+              <el-input
+                v-model.trim="form.departmentName"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <el-form-item
+              prop="departmentId"
+              :rules="[
+                { required: true, message: '所属餐厅ID不能为空'},
+              ]"
+              label="所属餐厅ID"
+            >
+              <el-input
+                v-model.trim="form.departmentId"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <el-form-item
+              prop="departmentfloorId"
+              :rules="[
+                { required: true, message: '所属餐厅楼层ID不能为空'},
+              ]"
+              label="所属餐厅楼层ID"
+            >
+              <el-input
+                v-model.number.trim="form.departmentfloorId"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <el-form-item
+              prop="departmentfloorName"
+              :rules="[
+                { required: true, message: '所属餐厅楼层名称不能为空'},
+              ]"
+              label="所属餐厅楼层名称"
+            >
+              <el-input
+                v-model.trim="form.departmentfloorName"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <el-form-item
+              prop="adminTel"
+              :rules="[
+                { required: true, message: '联系方式不能为空'},
+                { validator: telValidator, trigger: 'blur'}
+              ]"
+              label="联系方式"
+            >
+              <el-input
+                v-model.number.trim="form.adminTel"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <template
+              v-if="regTimeShow"
+              prop="adminCreatime"
+              :rules="[
+                { required: true, message: '注册时间不能为空'},
+              ]"
+            >
+              <el-form-item label="注册时间">
                 <el-input
-                  v-model="form.adminCreatime"
-                  :disabled="isCheck"
+                  v-model.trim="form.adminCreatime"
+                  disabled
                 />
               </el-form-item>
             </template>
@@ -255,16 +333,13 @@
         </span>
       </el-dialog>
     </div>
-    <WordTips />
   </div>
 </template>
 
 <script>
-import WordTips from '@/components/tips/index'
 import { addRegister, getAdminList, deleteAdmin, changeAdminInfo, searchAdmin } from '@/api/administrator.js'
 export default {
   name: 'Administrator',
-  components: { WordTips },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -278,21 +353,9 @@ export default {
   data() {
     return {
       search: '',
-      form: {
-        adminId: '',
-        adminRole: '',
-        adminName: '',
-        adminSex: '',
-        adminPwd: '',
-        adminTel: '',
-        adminIdcard: '',
-        adminEmail: '',
-        departmentName: '',
-        departmentfloorId: '',
-        departmentId: '',
-        departmentFoor: '',
-        adminCreatime: ''
-      },
+      super: 1,
+      common: 0,
+      form: {},
       diaTitle: '管理员详情',
       isCheck: false,
       isAdd: false,
@@ -300,17 +363,23 @@ export default {
       regTimeShow: true,
       changeCheckVisible: false,
       tableData: [{}],
-      listLoading: true
+      total: 0,
+      currentPage: 1,
+      pageSize: 10,
+      loading: false
     }
   },
   mounted() {
     this.RegetAdminList()
   },
   methods: {
-    RegetAdminList() {
-      getAdminList().then(res => {
+    async RegetAdminList() {
+      this.loading = true
+      await getAdminList().then(res => {
         this.tableData = res.data.records
+        this.total = res.data.total
       })
+      this.loading = false
     },
 
     formatterRole(row, columns, value) {
@@ -320,11 +389,11 @@ export default {
       } else if (adminRole === 1) {
         return '超级管理员'
       }
-      return ''
     },
+
     handleSearch() {
       const obj = {
-        adminName: this.searchAdmin
+        adminName: this.search
       }
       searchAdmin(obj).then(res => {
         this.tableData = res.data.records
@@ -341,14 +410,20 @@ export default {
       this.regTimeShow = false
       this.changeCheckVisible = true
       this.diaTitle = '增加管理员'
+      this.form = {
+        adminId: '',
+        adminRole: '',
+        adminName: '',
+        adminSex: '',
+        adminPwd: '',
+        adminTel: '',
+        adminIdcard: '',
+        adminEmail: '',
+        departmentName: '',
+        departmentfloorId: '',
+        departmentId: ''
+      }
       this.isCheck = false
-      addRegister().then(res => {
-        if (res.code === 200) {
-          this.$message('增加成功')
-        } else {
-          this.$message('增加失败，请重试！')
-        }
-      })
     },
     handleCheck(message) {
       this.isCheck = true
@@ -367,39 +442,127 @@ export default {
     handleDelete(message) {
       deleteAdmin({ 'adminId': message.adminId }).then(res => {
         if (res.code === 200) {
-          this.$message('删除成功')
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
           this.RegetAdminList()
         } else {
-          this.$message('删除失败，请重试')
+          this.$message.error('删除失败，请重试')
         }
       })
     },
-    changeCheckDiaClose() {
-      if (this.isChange) {
-        changeAdminInfo(this.form).then(res => {
-          if (res.code === 200) {
-            this.$message('修改成功')
-            this.RegetAdminList()
-          } else {
-            this.$message('修改失败，请重试')
-          }
-          this.isChange = false
-        })
-      } else if (this.isAdd) {
-        addRegister(this.form).then(res => {
-          if (res.code === 200) {
-            this.$message('增加成功')
-            this.RegetAdminList()
-          } else {
-            this.$message('增加失败，请重试')
-          }
-        })
-        this.isAdd = false
-      } else {
-        this.isCheck = false
+    // 校验表单
+    emailValidator(rule, value, callback) {
+      const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      if (value) {
+        if (emailReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱！'))
+        }
       }
-      this.changeCheckVisible = false
-      this.regTimeShow = true
+    },
+    pwdValidator(rule, value, callback) {
+      const pwdReg = /^[A-Za-z0-9]+$/
+      if (value) {
+        if (pwdReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入带有字母和数字的密码'))
+        }
+      }
+    },
+    cardValidator(rule, value, callback) {
+      const cardReg = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}[0-9Xx]$)/
+      if (value) {
+        if (cardReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的身份证号码'))
+        }
+      }
+    },
+    telValidator(rule, value, callback) {
+      const telReg = /^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$/
+      if (value) {
+        if (telReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的联系方式'))
+        }
+      }
+    },
+
+    changeCheckDiaClose() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isChange) {
+            changeAdminInfo(this.form).then(res => {
+              if (res.code === 200) {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.changeCheckVisible = false
+                this.RegetAdminList()
+              } else {
+                this.$message.error('修改失败，请重试')
+              }
+              this.isChange = false
+            })
+          } else if (this.isAdd) {
+            addRegister(this.form).then(res => {
+              if (res.code === 200) {
+                this.$message({
+                  message: '增加成功',
+                  type: 'success'
+                })
+                this.changeCheckVisible = false
+                this.RegetAdminList()
+              } else {
+                this.$message.error('增加失败，请重试')
+              }
+            })
+            this.isAdd = false
+          } else {
+            this.isCheck = false
+            this.regTimeShow = true
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async changeData(current, size, input) {
+      if (input) {
+        this.loading = true
+        await getAdminList({ current, size, text: input }).then(res => {
+          this.tableData = res.data.records
+        })
+        this.loading = false
+      }
+      this.loading = true
+      await getAdminList({ current, size }).then(res => {
+        this.tableData = res.data.records
+      })
+      this.loading = false
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      if (this.search) {
+        this.changeData(this.currentPage, val, this.search)
+        return
+      }
+      this.changeData(this.currentPage, val)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      if (this.search) {
+        this.changeData(this.currentPage, val, this.search)
+        return
+      }
+      this.changeData(val, this.pageSize)
     }
   }
 }
@@ -416,5 +579,13 @@ export default {
       margin-right: 2rem;
     }
   }
+}
+.pagination {
+  margin-top: 15px;
+  text-align: center;
+}
+.deleteBtn {
+  margin-left: 10px;
+  color: red;
 }
 </style>

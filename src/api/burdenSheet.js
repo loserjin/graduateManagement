@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 获取菜单列表
+// 获取菜谱配料列表
 export function getBurdenList(params) {
   return request({
     url: '/component/infos',
@@ -9,29 +9,28 @@ export function getBurdenList(params) {
   })
 }
 
-// 删除菜单
-export function deleteMenuList(data) {
+// 删除菜单配料
+export function deleteBurden(data) {
   return request({
-    url: '/type/delect',
+    url: '/component/delect',
     method: 'POST',
     data
   })
 }
 
-// 菜单模糊查询
-export function searchMenu(params) {
+// 菜单配料模糊查询
+export function searchBurden(params) {
   return request({
-    url: '/type/infos',
+    url: '/component/info',
     method: 'GET',
     params: { params }
-
   })
 }
 
-// 菜单修改
-export function changeMenu(data) {
+// 菜单配料修改
+export function changeBurden(data) {
   return request({
-    url: '/type/edit',
+    url: 'component/edit',
     method: 'POST',
     data
   })

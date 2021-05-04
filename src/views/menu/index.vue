@@ -3,114 +3,177 @@
     <div class="header">
       <div class="header_left">
         <span class="input">
-          <el-input v-model="input" placeholder="请输入搜索内容" />
+          <el-input
+            v-model="input"
+            placeholder="请输入搜索内容"
+          />
         </span>
         <span class="btn">
-          <el-button type="primary" @click="handleSearch">搜索</el-button>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >搜索</el-button>
         </span>
       </div>
       <div>
-        <span> <el-button type="primary">将已勾选列为今日菜谱</el-button></span>
+        <span>
+          <el-button type="primary">将已勾选列为今日菜谱</el-button>
+        </span>
       </div>
       <div class="header_right">
         <span class="addBtn">
-          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >新增</el-button>
         </span>
       </div>
-    </div>
-    <div class="dialog">
-      <el-dialog title="新增菜式" :visible.sync="dialogFormVisible">
-        <div class="form">
-          <div class="form_item">
-            <span>饭堂ID：</span>
-            <span><el-input v-model="addID" placeholder="请输入饭堂ID" /></span>
-          </div>
-          <div class="form_item">
-            <span>楼层：</span>
-            <span><el-input v-model="addFloor" placeholder="请输入楼层" /></span>
-          </div>
-          <div class="form_item">
-            <span>类别：</span>
-            <span><el-input v-model="addType" placeholder="请输入类别" /></span>
-          </div>
-          <div class="form_item">
-            <span>菜名：</span>
-            <span><el-input v-model="addName" placeholder="请输入菜名" /></span>
-          </div>
-          <div class="form_item_pic">
-            <span>菜图：</span>
-            <el-upload
-              class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :file-list="fileList"
-              list-type="picture"
-            >
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过4M</div>
-            </el-upload>
-          </div>
-          <div class="form_item">
-            <span>价钱：</span>
-            <span><el-input v-model="addMoney" placeholder="请输入价钱" /></span>
-          </div>
-          <div class="form_item">
-            <span>食材：</span>
-            <span><el-input v-model="addMaterial" placeholder="请输入食材" /></span>
-          </div>
-          <div class="form_item">
-            <span>菜式ID</span>
-            <span><el-input v-model="addMenuID" placeholder="请输入菜式ID" /></span>
-          </div>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormConfirm">确 定</el-button>
-        </div>
-      </el-dialog>
-
     </div>
     <div class="dialog">
       <el-dialog
         :title="diaTitle"
         :visible.sync="changeAddVisible"
         width="50%"
+        :before-close="handleClose"
       >
         <div>
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="饭堂ID">
-              <el-input v-model="form.name" :disabled="isCheck" />
+          <el-form
+            ref="form"
+            :model="form"
+            label-width="120px"
+          >
+            <el-form-item
+              label="类别"
+              prop="typeName"
+            >
+              <el-input
+                v-model="form.typeName"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="楼层">
-              <el-input v-model="form.name" :disabled="isCheck" />
+            <el-form-item
+              label="类别ID"
+              prop="typeId"
+            >
+              <el-input
+                v-model="form.typeId"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="类别">
-              <el-input v-model="form.name" :disabled="isCheck" />
+            <el-form-item
+              v-if="!isAdd"
+              label="菜式ID"
+              prop="menuId"
+            >
+              <el-input
+                v-model="form.menuId"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="菜名">
-              <el-input v-model="form.name" :disabled="isCheck" />
+            <el-form-item
+              label="菜名"
+              prop="menuName"
+            >
+              <el-input
+                v-model="form.menuName"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="菜式ID">
-              <el-input v-model="form.name" :disabled="isCheck" />
+
+            <el-form-item
+              label="菜图"
+              prop="menuPic"
+            >
+              <el-upload
+                v-if="isAdd"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleImgRemove"
+              >
+                <i class="el-icon-plus" />
+              </el-upload>
+              <el-dialog
+                :visible.sync="dialogImgVisible"
+                prop="menuPic"
+              >
+                <img
+                  width="100%"
+                  :src="form.menuPic"
+                  alt="菜图"
+                >
+              </el-dialog>
+
+              <el-image
+                v-if="!isAdd"
+                style="width: 100px; height: 100px"
+                :src="form.menuPic"
+              />
             </el-form-item>
-            <el-form-item label="菜图">
-              <span><img src="" alt=""></span>
+            <el-form-item
+              label="定金"
+              prop="menuMoney"
+            >
+              <el-input
+                v-model="form.menuMoney"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="价钱">
-              <el-input v-model="form.name" :disabled="isCheck" />
+            <el-form-item
+              label="单价"
+              prop="menuFMoney"
+            >
+              <el-input
+                v-model="form.menuFMoney"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="食材">
-              <el-input v-model="form.name" :disabled="isCheck" />
+            <el-form-item
+              label="饭堂ID"
+              prop="departmentId"
+            >
+              <el-input
+                v-model="form.departmentId"
+                :disabled="isCheck"
+              />
             </el-form-item>
-            <el-form-item label="创建日期">
-              <el-input v-model="form.name" :disabled="isCheck" />
+            <el-form-item
+              label="饭堂名称"
+              prop="departmentName"
+            >
+              <el-input
+                v-model="form.departmentName"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <el-form-item
+              label="楼层ID"
+              prop="departmentfloorId"
+            >
+              <el-input
+                v-model="form.departmentfloorId"
+                :disabled="isCheck"
+              />
+            </el-form-item>
+            <el-form-item
+              label="楼层名称"
+              prop="departmentfloorName"
+            >
+              <el-input
+                v-model="form.departmentfloorName"
+                :disabled="isCheck"
+              />
             </el-form-item>
           </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="changeAddVisible = false">取 消</el-button>
-          <el-button type="primary" @click="changeAddDiaClose">确 定</el-button>
+          <el-button
+            type="primary"
+            @click="changeAddDiaClose"
+          >确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -126,51 +189,48 @@
         width="55"
       />
       <el-table-column
-        prop="departmentId"
-        label="饭堂ID"
-        width="120"
+        prop="typeId"
+        label="类型ID"
+        align="center"
+      />
+      <el-table-column
+        prop="typeName"
+        label="菜式类型"
+        align="center"
+      />
+      <el-table-column
+        prop="menuId"
+        label="菜式ID"
+        align="center"
+      />
+      <el-table-column
+        prop="menuName"
+        label="菜名"
+        align="center"
+      />
+      <el-table-column
+        prop="menuMoney"
+        label="定金"
+        align="center"
+      />
+      <el-table-column
+        prop="menuFMoney"
+        label="单价"
         align="center"
       />
       <el-table-column
         prop="departmentName"
         label="饭堂名称"
-        width="120"
-        align="center"
-      />
-      <el-table-column
-        prop="departmentId"
-        label="饭堂ID"
-        width="150"
-        align="center"
-      />
-      <el-table-column
-        prop="typeName"
-        label="菜名"
-        width="120"
-        align="center"
-      />
-      <el-table-column
-        prop="typeId"
-        label="菜式ID"
-        width="80"
-        align="center"
-      />
-      <el-table-column
-        prop="money"
-        label="价钱"
-        width="120"
         align="center"
       />
       <el-table-column
         prop="departmentfloorName"
-        label="饭堂楼层ID"
-        width="150"
+        label="楼层名称"
         align="center"
       />
       <el-table-column
-        prop="departmentfloorName"
-        label="饭堂名称楼层"
-        width="120"
+        prop="menuCreatime"
+        label="创建时间"
         align="center"
       />
       <el-table-column
@@ -179,23 +239,34 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleCheck(scope.row)">查看</el-button>
-          <el-button type="text" size="small" @click="handleChange(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">移除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleCheck(scope.row)"
+          >查看</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleChange(scope.row)"
+          >修改</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="handleDelete(scope.row)"
+          >移除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
       <el-pagination
-        :current-page="currentPage4"
+        v-if="total"
+        :current-page="currentPage"
         :page-sizes="[15, 20, 25, 30]"
-        :page-size="15"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-
     </div>
   </div>
 </template>
@@ -206,27 +277,17 @@ export default {
   data() {
     return {
       input: '', // 模糊搜索输入框
-      dialogFormVisible: false, // 增加菜式弹窗
       fileList: [], // 菜图
-      addID: '',
-      addFloor: '',
-      addType: '',
-      addName: '',
-      addMoney: '',
-      addMaterial: '',
-      addMenuID: '',
       changeAddVisible: false,
+      dialogImgVisible: false,
       diaTitle: '',
       isCheck: false,
-      form: {
-        name: ''
-      },
+      isChange: false,
+      isAdd: false,
+      form: {},
       tableData: [],
-      total: 30,
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+      total: 0,
+      currentPage: 1,
       loading: false
     }
   },
@@ -248,9 +309,21 @@ export default {
       console.log('search')
     },
     handleAdd() {
-      this.dialogFormVisible = true
+      this.changeAddVisible = true
       this.diaTitle = '增加菜式'
-      this.isCheck = false
+      this.isAdd = true
+      this.form = {
+        typeId: '',
+        typeName: '',
+        menuName: '',
+        menuMoney: '',
+        menuFMoney: '',
+        menuPic: '',
+        departmentId: '',
+        departmentName: '',
+        departmentfloorId: '',
+        departmentfloorName: ''
+      }
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -258,17 +331,33 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
-    dialogFormConfirm() {
+    changeAddDiaClose() {
+      if (this.add) {
+        changeMenu(this.form).then(() => {
+          this.$message({
+            showClose: true,
+            message: '增加成功',
+            type: 'success'
+          })
+          this.getData()
+        }).catch(() => {
+          this.$message.error('增加失败，请重试')
+        })
+      }
+
       this.dialogFormVisible = false
     },
-    changeAddDiaClose() {
+    handleClose() {
+      this.isChange = false
+      this.isAdd = false
+      this.isCheck = false
       this.changeAddVisible = false
     },
     handleSelectionChange() {
       console.log('ad')
     },
     handleCheck(row) {
-      console.log(row)
+      this.form = row
       this.diaTitle = '查看菜式详情'
       this.changeAddVisible = true
       this.isCheck = true
@@ -276,7 +365,15 @@ export default {
     handleChange(row) {
       this.changeAddVisible = true
       this.diaTitle = '修改菜式详情'
+      this.isChange = true
       this.isCheck = false
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogImgVisible = true
+    },
+    handleImgRemove(file, fileList) {
+      console.log(file, fileList)
     },
     handleDelete(row) {
       console.log(row)
@@ -291,48 +388,44 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.header{
-  display:flex;
+.header {
+  display: flex;
   margin: 5px 1rem 5px 50px;
-  justify-content:space-between;
+  justify-content: space-between;
 
-  .header_left{
-
-    .input{
-      display:inline-block;
+  .header_left {
+    .input {
+      display: inline-block;
       width: 20rem;
       margin-right: 1rem;
 
-      input{
+      input {
         width: 20rem;
       }
     }
 
-  .btn{
+    .btn {
       display: inline-block;
     }
   }
 
-  .header_right{
-
-     .addBtn{
+  .header_right {
+    .addBtn {
       width: 3rem;
     }
   }
 }
 
-.dialog{
-  .form{
-
-    .form_item_pic{
+.dialog {
+  .form {
+    .form_item_pic {
       margin: 1rem;
-      display:flex;
+      display: flex;
     }
   }
 }
-.pagination{
+.pagination {
   margin-top: 10px;
   text-align: center;
 }
-
 </style>
