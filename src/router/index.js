@@ -41,32 +41,32 @@ export const constantRoutes = [
         path: 'administrator',
         name: 'Administrator',
         component: () => import('@/views/administrator/index'),
-        meta: { title: '管理员', icon: '管理员', roles: ['0'] }
+        meta: { title: '管理员', roles: ['0'] }
       },
       {
         path: 'user',
         name: 'User',
         component: () => import('@/views/user/index'),
-        meta: { title: '用户', icon: '用户', roles: ['1', '0'] }
+        meta: { title: '用户', roles: ['1', '0'] }
       }
     ]
   },
   {
     path: '/diningHall',
     component: Layout,
-    meta: { title: '饭堂楼层信息', icon: '人员管理' },
+    meta: { title: '饭堂楼层信息', icon: '建筑' },
     children: [
       {
         path: '/dining',
         name: 'diningHall',
         component: () => import('@/views/diningHall/index'),
-        meta: { title: '饭堂信息', icon: '菜谱' }
+        meta: { title: '饭堂信息' }
       },
       {
         path: 'index',
         name: 'dingingFloor',
         component: () => import('@/views/diningFloor/index'),
-        meta: { title: '楼层信息', icon: '菜谱' }
+        meta: { title: '楼层信息' }
       }
     ]
   },
@@ -78,26 +78,26 @@ export const constantRoutes = [
         path: '/menuType',
         name: 'menuType',
         component: () => import('@/views/menuType/index'),
-        meta: { title: '菜系信息', icon: '菜谱' }
+        meta: { title: '菜系信息', icon: '菜系' }
       }
     ]
   },
   {
     path: '/menu',
     component: Layout,
-    meta: { title: '菜谱信息', icon: '人员管理' },
+    meta: { title: '菜谱信息', icon: '菜单' },
     children: [
       {
         path: '/menuMessage',
         name: 'Menu',
         component: () => import('@/views/menu/index'),
-        meta: { title: '全部菜谱', icon: '菜谱' }
+        meta: { title: '全部菜谱' }
       },
       {
         path: '/burdenSheet',
         name: 'burdenSheet',
         component: () => import('@/views/burdenSheet/index'),
-        meta: { title: '菜谱配料表', icon: '菜谱' }
+        meta: { title: '菜谱配料表' }
       }
     ]
   },
@@ -124,7 +124,7 @@ export const constantRoutes = [
         name: '食材材料',
         meta: {
           title: '食材进货',
-          icon: '材料'
+          icon: '材料登记'
         }
       }
     ]
