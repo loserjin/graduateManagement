@@ -86,9 +86,11 @@
             >
               <el-upload
                 v-if="isAdd"
+                action="http://159.75.3.52:8090/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleImgRemove"
+                limit="1"
               >
                 <i class="el-icon-plus" />
               </el-upload>
@@ -102,7 +104,6 @@
                   alt="菜图"
                 >
               </el-dialog>
-
               <el-image
                 v-if="!isAdd"
                 style="width: 100px; height: 100px"

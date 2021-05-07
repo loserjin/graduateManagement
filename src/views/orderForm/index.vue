@@ -5,7 +5,7 @@
         <span class="input">
           <el-input
             v-model="input"
-            placeholder="请输入内容"
+            placeholder="请输入用户名称"
           />
         </span>
         <span>
@@ -14,12 +14,31 @@
             @click="handleSearch"
           >搜索</el-button>
         </span>
+        <span class="clear_btn">
+          <el-button @click="handleClear">重置</el-button>
+        </span>
+      </div>
+      <div>
+        <span>就餐时间段：</span>
+        <el-select
+          v-model="value"
+          placeholder="请选择时间段"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </div>
       <div class="date">
+        <span>订单日期：</span>
         <el-date-picker
           v-model="date"
           type="date"
-          placeholder="选择日期"
+          placeholder="选择订单日期"
+          format="yyyy-MM-dd"
         />
       </div>
     </div>
@@ -45,12 +64,6 @@
         label="用户名"
         align="center"
       />
-      <el-table-column
-        prop="userorderId"
-        label="订单ID"
-        align="center"
-      />
-
       <el-table-column
         prop="userorderFmoney"
         label="定金"
@@ -81,6 +94,19 @@
         label="下单时间"
         align="center"
       />
+      <el-table-column
+        fixed="right"
+        label="操作"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click="handleCheck(scope.row)"
+          >查看</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <div
       class="pagination"
@@ -97,6 +123,89 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <div>
+      <div class="dialog_check">
+        <el-dialog
+          title="查看用户订单信息"
+          :visible.sync="checkVisible"
+          width="50%"
+          :before-close="handleClose"
+        >
+          <div class="checkWrapper">
+            <el-form
+              ref="form"
+              :model="form"
+              label-width="150px"
+            >
+              <el-form-item label="用户订单ID：">
+                <span>{{ form.userorderId }}</span>
+              </el-form-item>
+              <el-form-item label="openID：">
+                <span>{{ form.openId }}</span>
+              </el-form-item>
+              <el-form-item label="订单总金额(元)：">
+                <span>{{ form.userorderSmoney }}</span>
+              </el-form-item>
+              <el-form-item label="订单应付订金(元)：">
+                <span>{{ form.userorderFmoney }}</span>
+              </el-form-item>
+              <el-form-item label="支付订金状态：">
+                <span>{{ form.userorderFStatus===0?'未支付':form.userorderFStatus===1?'已支付':'支付失败' }}</span>
+              </el-form-item>
+              <el-form-item label="订单应付尾款：">
+                <span>{{ form.userorderMmoney }}</span>
+              </el-form-item>
+              <el-form-item label="支付尾款状态：">
+                <span>{{ form.userorderMStatus===0?'未支付':'已支付' }}</span>
+              </el-form-item>
+              <el-form-item label="用户地址ID：">
+                <span>{{ form.useraddressId }}</span>
+              </el-form-item>
+              <el-form-item label="联系方式：">
+                <span>{{ form.useraddressTel }}</span>
+              </el-form-item>
+              <el-form-item label="饭堂名称：">
+                <span>{{ form.departmentName }}</span>
+              </el-form-item>
+              <el-form-item label="地址：">
+                <span>{{ form.useraddressName }}</span>
+              </el-form-item>
+              <el-form-item label="用户性别：">
+                <span>{{ form.gender }}</span>
+              </el-form-item>
+              <el-form-item label="饭堂ID：">
+                <span>{{ form.departmentId }}</span>
+              </el-form-item>
+              <el-form-item label="饭堂名称：">
+                <span>{{ form.departmentName }}</span>
+              </el-form-item>
+              <el-form-item label="楼层ID：">
+                <span>{{ form.departmentfloorId }}</span>
+              </el-form-item>
+              <el-form-item label="楼层名称：">
+                <span>{{ form.departmentfloorName }}</span>
+              </el-form-item>
+              <el-form-item label="用餐时间段：">
+                <span>{{ form.dailymenuTime===0?'早上':form.dailymenuTime===1?'中午':'下午' }}</span>
+              </el-form-item>
+              <el-form-item label="订单创建日期：">
+                <span>{{ form.userorderCreatime }}</span>
+              </el-form-item>
+            </el-form>
+          </div>
+          <span
+            slot="footer"
+            class="dialog-footer"
+          >
+            <el-button @click="checkVisible = false">取 消</el-button>
+            <el-button
+              type="primary"
+              @click="checkVisible = false"
+            >确 定</el-button>
+          </span>
+        </el-dialog>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -107,40 +216,81 @@ export default {
   data() {
     return {
       input: '',
+      options: [{
+        value: 0,
+        label: '早上'
+      }, {
+        value: 1,
+        label: '中午'
+      }, {
+        value: 2,
+        label: '下午'
+      }],
+      value: '',
       tableData: [],
       loading: false,
+      checkVisible: false,
       total: 0,
       currentPage: 1,
       pageSize: 5,
-      date: ''
+      date: '',
+      form: {}
     }
   },
   mounted() {
     this.getData()
   },
   methods: {
-    async getData() {
+    async getData(mess) {
       try {
         this.loading = true
-        await getOrderList().then(response => {
-          this.tableData = response.data.records
-          this.total = response.data.total
-        })
+        if (mess) {
+          await getOrderList(mess).then(response => {
+            this.tableData = response.data.records
+            this.total = response.data.total
+          })
+        } else {
+          await getOrderList().then(response => {
+            this.tableData = response.data.records
+            this.total = response.data.total
+          })
+        }
       } catch {
         return false
       }
       this.loading = false
     },
     handleSearch() {
-      console.log(this.input)
+      const mess = {}
+      if (this.input) {
+        mess.name = this.input
+      }
+      if (this.date) {
+        mess.date = this.date
+      }
+      if (this.value || this.value === 0) {
+        mess.time = +this.value
+      }
+      this.getData(mess)
     },
-    handleClick(row) {
+    handleClear() {
+      this.input = ''
+      this.value = ''
+      this.date = ''
+      this.getData()
+    },
+    handleClose() {
+      this.checkVisible = false
+    },
+    handleCheck(row) {
+      this.checkVisible = true
+      this.form = row
       console.log(row)
     },
-    async changeData(current, size, input) {
-      if (input) {
+    async changeData(current, size, mess) {
+      if (mess) {
         this.loading = true
-        await getOrderList(Object.assign({ current, size }, input)).then(res => {
+        await getOrderList(Object.assign({ current, size }, mess)).then(res => {
           this.tableData = res.data.records
         })
         this.loading = false
@@ -153,11 +303,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      if (this.inputDing || this.inputFloor || this.date) {
+      if (this.input || this.date || this.value) {
         const obj = {}
-        if (this.inputDing) { obj.departmentName = this.inputDing }
-        if (this.inputFloor) { obj.departmentfloorName = this.inputFloor }
-        if (this.date) { obj.data = this.date }
+        if (this.input) { obj.name = this.input }
+        if (this.date) { obj.date = this.date }
+        if (this.value) { obj.time = this.date }
         this.changeData(this.currentPage, val, obj)
         return
       }
@@ -165,11 +315,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      if (this.inputDing || this.inputFloor || this.date) {
+      if (this.input || this.date || this.value) {
         const obj = {}
-        if (this.inputDing) { obj.departmentName = this.inputDing }
-        if (this.inputFloor) { obj.departmentfloorName = this.inputFloor }
-        if (this.date) { obj.data = this.date }
+        if (this.input) { obj.name = this.input }
+        if (this.date) { obj.date = this.date }
+        if (this.value) { obj.time = this.date }
         this.changeData(this.currentPage, val, obj)
         return
       }
@@ -189,6 +339,14 @@ export default {
       width: 20rem;
       margin-right: 2rem;
     }
+    .clear_btn {
+      margin-left: 10px;
+    }
+  }
+}
+.checkWrapper {
+  .el-form-item {
+    margin-bottom: 0;
   }
 }
 </style>

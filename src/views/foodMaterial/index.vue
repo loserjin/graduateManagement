@@ -25,8 +25,8 @@
         <span>
           <el-button
             type="primary"
-            @click="handleAdd"
-          >新增</el-button>
+            @click="handleExport"
+          >导出</el-button>
         </span>
       </div>
       <div class="date">
@@ -402,22 +402,23 @@ export default {
     handleCheck() {
       this.checkVisible = true
     },
-    handleAdd() {
-      this.title = '增加食材订单信息'
-      this.changeVisible = true
-      this.isAdd = true
-      this.form = {
-        purchaseType: '',
-        purchaseName: '',
-        purchaseTotal: '',
-        purchaseMoney: '',
-        purchaseTotalmoney: '',
-        departmentId: '',
-        departmentName: '',
-        departmentfloorId: '',
-        departmentfloorName: ''
-      }
-      this.disable = false
+    handleExport() {
+      // this.title = '增加食材订单信息'
+      // this.changeVisible = true
+      // this.isAdd = true
+      // this.form = {
+      //   purchaseType: '',
+      //   purchaseName: '',
+      //   purchaseTotal: '',
+      //   purchaseMoney: '',
+      //   purchaseTotalmoney: '',
+      //   departmentId: '',
+      //   departmentName: '',
+      //   departmentfloorId: '',
+      //   departmentfloorName: ''
+      // }
+      // this.disable = false
+      console.log(11)
     },
 
     async handleSearch() {
