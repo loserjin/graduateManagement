@@ -45,9 +45,9 @@ const actions = {
         .then(response => {
           const { res, token } = response
           sessionStorage.setItem('token', token)
-          sessionStorage.setItem('adminId', res.data.adminId)
-          sessionStorage.setItem('adminName', res.data.adminName)
           sessionStorage.setItem('personalMess', res.data)
+
+          sessionStorage.setItem('adminName', res.data.adminName)
           commit('SET_TOKEN', token)
           commit('SET_ADMINID', res.data.adminId)
           commit('SET_NAME', res.data.adminName)
@@ -65,6 +65,7 @@ const actions = {
     const personalMess = sessionStorage.getItem('personalMess')
     return new Promise((resolve, reject) => {
       const { adminId, adminRole, adminName } = personalMess
+      sessionStorage.setItem('adminId', personalMess.adminId)
       const data = { adminId, adminRole, adminName }
       commit('SET_NAME', adminName)
       commit('SET_ADMINID', adminId)

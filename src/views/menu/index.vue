@@ -91,6 +91,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleImgRemove"
                 limit="1"
+                :on-success="uploadPicSucc"
               >
                 <i class="el-icon-plus" />
               </el-upload>
@@ -112,7 +113,7 @@
             </el-form-item>
             <el-form-item
               label="定金"
-              prop="menuMoney"
+              prop="menuFMoney"
             >
               <el-input
                 v-model="form.menuMoney"
@@ -121,7 +122,7 @@
             </el-form-item>
             <el-form-item
               label="单价"
-              prop="menuFMoney"
+              prop="menuMoney"
             >
               <el-input
                 v-model="form.menuFMoney"
@@ -210,12 +211,12 @@
         align="center"
       />
       <el-table-column
-        prop="menuMoney"
+        prop="menuFMoney"
         label="定金"
         align="center"
       />
       <el-table-column
-        prop="menuFMoney"
+        prop="menuMoney"
         label="单价"
         align="center"
       />
@@ -332,8 +333,12 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
+    uploadPicSucc(response, file, fileList) {
+      this.form.menuPic = response.data
+    },
     changeAddDiaClose() {
-      if (this.add) {
+      console.log(11)
+      if (this.isAdd) {
         changeMenu(this.form).then(() => {
           this.$message({
             showClose: true,
@@ -377,6 +382,15 @@ export default {
       console.log(file, fileList)
     },
     handleDelete(row) {
+      deleteMenuList({ menuId: row.menuId }).then(() => {
+        this.$message({
+          showClose: true,
+          message: '删除成功',
+          type: 'success'
+        })
+      }).catch(() => {
+        this.$message.error('删除失败')
+      })
       console.log(row)
     },
     handleSizeChange(val) {

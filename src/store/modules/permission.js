@@ -30,7 +30,6 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-
   return res
 }
 
@@ -49,7 +48,7 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
-      const accessedRoutes = filterAsyncRoutes(constantRoutes, roles)
+      const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

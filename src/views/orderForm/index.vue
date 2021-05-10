@@ -19,7 +19,7 @@
         </span>
       </div>
       <div>
-        <span>就餐时间段：</span>
+        <span>就餐时间：</span>
         <el-select
           v-model="value"
           placeholder="请选择时间段"
@@ -336,7 +336,7 @@ export default {
   .search {
     display: flex;
     .input {
-      width: 20rem;
+      width: 10rem;
       margin-right: 2rem;
     }
     .clear_btn {

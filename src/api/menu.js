@@ -26,3 +26,12 @@ export function changeMenu(data) {
     data
   })
 }
+
+// 增加每日菜单
+export function addDailyMenu(data) {
+  return request({
+    url: '/dailymenu/edit',
+    method: 'POST',
+    data
+  })
+}

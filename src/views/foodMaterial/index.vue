@@ -314,7 +314,7 @@
 </template>
 
 <script>
-import { getMaterialList, changeMaterial, deleteMaterial, searchMaterial, addMaterial } from '@/api/material.js'
+import { getMaterialList, changeMaterial, deleteMaterial, addMaterial } from '@/api/material.js'
 export default {
 
   data() {
@@ -346,6 +346,7 @@ export default {
       this.loading = true
       try {
         getMaterialList().then(response => {
+          console.log(response)
           this.tableData = response.data.records
           this.total = response.data.total
         })
@@ -403,21 +404,6 @@ export default {
       this.checkVisible = true
     },
     handleExport() {
-      // this.title = '增加食材订单信息'
-      // this.changeVisible = true
-      // this.isAdd = true
-      // this.form = {
-      //   purchaseType: '',
-      //   purchaseName: '',
-      //   purchaseTotal: '',
-      //   purchaseMoney: '',
-      //   purchaseTotalmoney: '',
-      //   departmentId: '',
-      //   departmentName: '',
-      //   departmentfloorId: '',
-      //   departmentfloorName: ''
-      // }
-      // this.disable = false
       console.log(11)
     },
 
@@ -499,7 +485,7 @@ export default {
   .search {
     display: flex;
     .input {
-      width: 20rem;
+      width: 10rem;
       margin-right: 2rem;
     }
   }

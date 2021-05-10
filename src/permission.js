@@ -26,14 +26,12 @@ router.beforeEach(async (to, from, next) => {
       if (!sessionStorage.getItem('adminId')) {
         const { adminRole } = await store.dispatch('user/getInfo')
         const roles = adminRole
-        // // generate accessible routes map based on roles
         const accessRoutes = await store.dispatch(
           'permission/generateRoutes',
           roles
         )
-
-        // // dynamically add accessible routes
         router.addRoutes(accessRoutes)
+        console.log(router, 'router')
         next({ ...to, replace: true })
       }
       if (hasGetUserInfo) {
