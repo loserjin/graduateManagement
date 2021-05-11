@@ -14,7 +14,7 @@ export function deleteMenuList(data) {
   return request({
     url: '/menu/delect',
     method: 'POST',
-    data
+    params: data
   })
 }
 
@@ -32,6 +32,6 @@ export function addDailyMenu(data) {
   return request({
     url: '/dailymenu/edit',
     method: 'POST',
-    data
+    params: data
   })
 }

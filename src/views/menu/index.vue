@@ -15,11 +15,6 @@
           >搜索</el-button>
         </span>
       </div>
-      <div>
-        <span>
-          <el-button type="primary">将已勾选列为今日菜谱</el-button>
-        </span>
-      </div>
       <div class="header_right">
         <span class="addBtn">
           <el-button
@@ -45,6 +40,9 @@
             <el-form-item
               label="类别"
               prop="typeName"
+              :rules="[
+                {required: true,message:'类别不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.typeName"
@@ -54,6 +52,9 @@
             <el-form-item
               label="类别ID"
               prop="typeId"
+              :rules="[
+                {required: true,message:'类别ID不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.typeId"
@@ -64,6 +65,9 @@
               v-if="!isAdd"
               label="菜式ID"
               prop="menuId"
+              :rules="[
+                {required: true,message:'菜式ID不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.menuId"
@@ -73,6 +77,9 @@
             <el-form-item
               label="菜名"
               prop="menuName"
+              :rules="[
+                {required: true,message:'菜名不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.menuName"
@@ -88,9 +95,7 @@
                 v-if="isAdd"
                 action="http://159.75.3.52:8090/upload"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleImgRemove"
-                limit="1"
+                :limit="limit"
                 :on-success="uploadPicSucc"
               >
                 <i class="el-icon-plus" />
@@ -114,6 +119,9 @@
             <el-form-item
               label="定金"
               prop="menuFMoney"
+              :rules="[
+                {required: true,message:'定金不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.menuMoney"
@@ -123,6 +131,9 @@
             <el-form-item
               label="单价"
               prop="menuMoney"
+              :rules="[
+                {required: true,message:'单价不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.menuFMoney"
@@ -132,6 +143,9 @@
             <el-form-item
               label="饭堂ID"
               prop="departmentId"
+              :rules="[
+                {required: true,message:'饭堂ID不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.departmentId"
@@ -141,6 +155,9 @@
             <el-form-item
               label="饭堂名称"
               prop="departmentName"
+              :rules="[
+                {required: true,message:'饭堂名称不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.departmentName"
@@ -150,6 +167,9 @@
             <el-form-item
               label="楼层ID"
               prop="departmentfloorId"
+              :rules="[
+                {required: true,message:'楼层ID不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.departmentfloorId"
@@ -159,6 +179,9 @@
             <el-form-item
               label="楼层名称"
               prop="departmentfloorName"
+              :rules="[
+                {required: true,message:'楼层名称不能为空'}
+              ]"
             >
               <el-input
                 v-model="form.departmentfloorName"
@@ -184,12 +207,7 @@
       :data="tableData"
       border
       style="width: 100%"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-        width="55"
-      />
       <el-table-column
         prop="typeId"
         label="类型ID"
@@ -274,7 +292,7 @@
 </template>
 
 <script>
-import { getMenuList, deleteMenuList, searchMenu, changeMenu } from '@/api/menu.js'
+import { getMenuList, deleteMenuList, changeMenu } from '@/api/menu.js'
 export default {
   data() {
     return {
@@ -287,6 +305,7 @@ export default {
       isChange: false,
       isAdd: false,
       form: {},
+      limit: 1,
       tableData: [],
       total: 0,
       currentPage: 1,
@@ -327,40 +346,34 @@ export default {
         departmentfloorName: ''
       }
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
     uploadPicSucc(response, file, fileList) {
       this.form.menuPic = response.data
     },
     changeAddDiaClose() {
-      console.log(11)
-      if (this.isAdd) {
-        changeMenu(this.form).then(() => {
-          this.$message({
-            showClose: true,
-            message: '增加成功',
-            type: 'success'
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          changeMenu(this.form).then(() => {
+            this.$message({
+              showClose: true,
+              message: '变更成功',
+              type: 'success'
+            })
+            this.getData()
+            this.isAdd = false
+            this.isChange = false
+            this.changeAddVisible = false
+            this.dialogFormVisible = false
+          }).catch(() => {
+            this.$message.error('变更失败，请重试')
           })
-          this.getData()
-        }).catch(() => {
-          this.$message.error('增加失败，请重试')
-        })
-      }
-
-      this.dialogFormVisible = false
+        }
+      })
     },
     handleClose() {
       this.isChange = false
       this.isAdd = false
       this.isCheck = false
       this.changeAddVisible = false
-    },
-    handleSelectionChange() {
-      console.log('ad')
     },
     handleCheck(row) {
       this.form = row
@@ -378,27 +391,29 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogImgVisible = true
     },
-    handleImgRemove(file, fileList) {
-      console.log(file, fileList)
-    },
     handleDelete(row) {
-      deleteMenuList({ menuId: row.menuId }).then(() => {
-        this.$message({
-          showClose: true,
-          message: '删除成功',
-          type: 'success'
+      this.$confirm('此操作将删除菜式, 是否继续?', '提示', {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteMenuList({ menuId: row.menuId }).then(() => {
+          this.$message({
+            showClose: true,
+            message: '删除成功',
+            type: 'success'
+          })
+        }).catch(() => {
+          this.$message.error('删除失败')
         })
       }).catch(() => {
-        this.$message.error('删除失败')
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
       })
-      console.log(row)
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
     }
+
   }
 }
 </script>

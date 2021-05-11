@@ -277,7 +277,7 @@ export default {
         })
         return
       }
-      if (!this.value) {
+      if (!this.value && this.value !== 0) {
         this.$message({
           message: '请选择时间段',
           type: 'warning'
@@ -294,7 +294,7 @@ export default {
       this.menuIdList.forEach(item => {
         menuId.push(item.menuId)
       })
-      const mess = { dailymenuCreatime: this.date, dailymenuTime: this.value, menuId }
+      const mess = { dailymenuCreatime: this.date, dailymenuTime: this.value, menuId: menuId.join(',') }
       await addDailyMenu(mess).then(() => {
         this.$notify({
           title: '成功',
