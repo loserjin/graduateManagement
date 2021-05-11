@@ -159,6 +159,30 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/comments',
+    component: Layout,
+    children: [
+      {
+        path: 'comments',
+        meta: { title: '用户评论', icon: '订单' },
+        name: 'comments',
+        component: () => import('@/views/comments/index')
+      }
+    ]
+  },
+  {
+    path: '/publicity',
+    component: Layout,
+    children: [
+      {
+        path: 'publicity',
+        meta: { title: '公示信息', icon: '订单' },
+        name: 'publicity',
+        component: () => import('@/views/publicity/index')
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
