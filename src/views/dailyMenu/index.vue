@@ -5,7 +5,7 @@
         <span class="input">
           <el-input
             v-model="search"
-            placeholder="请输入内容"
+            placeholder="请输入菜名"
           />
         </span>
         <span>
@@ -20,6 +20,8 @@
           v-model="date"
           type="date"
           placeholder="选择日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
         />
       </div>
     </div>
@@ -173,7 +175,7 @@
 
 <script>
 import WordTips from '@/components/tips/index'
-import { getMaterialList, addMaterial, deleteMaterial, searchMaterial } from '@/api/dailyMenu.js'
+import { getDailyMenuList, addMaterial, deleteMaterial } from '@/api/dailyMenu.js'
 export default {
   components: { WordTips },
   data() {
@@ -196,7 +198,7 @@ export default {
   methods: {
     async getData() {
       this.loading = true
-      await getMaterialList().then(res => {
+      await getDailyMenuList().then(res => {
         const { records = [] } = res.data
         if (res.code === 200) {
           this.tableData = records
@@ -205,9 +207,12 @@ export default {
       this.loading = false
     },
     handleSearch() {
-      console.log('search')
-      searchMaterial().then(res => {
-
+      if (!this.search && !this.date) {
+        this.$message('请选择日期或填写内容')
+        return
+      }
+      getDailyMenuList({ date: this.date, menuName: this.search }).then(res => {
+        this.tableData = res.data.records
       })
     },
     handleCheck(row) {

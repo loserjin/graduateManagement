@@ -5,7 +5,7 @@ export function getMenuList(params) {
   return request({
     url: '/menu/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 

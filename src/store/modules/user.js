@@ -49,6 +49,7 @@ const actions = {
           sessionStorage.setItem('adminRole', res.data.adminRole)
           sessionStorage.setItem('adminName', res.data.adminName)
           sessionStorage.setItem('adminId', res.data.adminId)
+          sessionStorage.setItem('departmentId', res.data.departmentmentId)
           commit('SET_TOKEN', token)
           commit('SET_ADMINID', res.data.adminId)
           commit('SET_NAME', res.data.adminName)

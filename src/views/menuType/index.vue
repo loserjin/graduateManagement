@@ -334,12 +334,12 @@ export default {
     async changeData(currentPage, pageSize, inputData) {
       this.loading = true
       if (inputData) {
-        await this.getData({ size: pageSize, current: currentPage, departmentName: inputData }).then(response => {
+        await getMenusType({ size: pageSize, current: currentPage, departmentName: inputData }).then(response => {
           this.tableData = response.data.records
           this.total = response.data.total
         })
       }
-      await this.getData({ size: pageSize, current: currentPage }).then(response => {
+      await getMenusType({ size: pageSize, current: currentPage }).then(response => {
         this.tableData = response?.data?.records
         this.total = response?.data?.total
       })

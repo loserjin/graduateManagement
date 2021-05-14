@@ -5,7 +5,7 @@ export function getBurdenList(params) {
   return request({
     url: '/component/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 

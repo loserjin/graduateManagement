@@ -4,7 +4,8 @@ import request from '@/utils/request'
 export function getMaterialList(data) {
   return request({
     url: '/purchase/infos',
-    method: 'GET'
+    method: 'GET',
+    params: data
   })
 }
 
@@ -12,7 +13,8 @@ export function getMaterialList(data) {
 export function getMaterial(data) {
   return request({
     url: '/purchase/info',
-    method: 'GET'
+    method: 'GET',
+    params: data
   })
 }
 

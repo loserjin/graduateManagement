@@ -5,7 +5,7 @@ export function getDiningHall(params) {
   return request({
     url: '/department/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 
@@ -32,7 +32,7 @@ export function getDiningFloor(params) {
   return request({
     url: '/departmentfloor/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 
@@ -50,6 +50,6 @@ export function deleteDiningFloor(data) {
   return request({
     url: '/departmentfloor/delect',
     method: 'POST',
-    data
+    params: data
   })
 }

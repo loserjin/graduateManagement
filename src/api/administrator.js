@@ -32,7 +32,7 @@ export function getAdminList(params) {
   return request({
     url: '/admin/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 
@@ -59,7 +59,7 @@ export function searchAdmin(params) {
   return request({
     url: '/admin/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 
@@ -68,6 +68,6 @@ export function logout(params) {
   return request({
     url: '/logout',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }

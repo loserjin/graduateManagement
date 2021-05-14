@@ -490,7 +490,7 @@ export default {
   },
   methods: {
     async getMenuType() {
-      let typeObj = {}
+      let typeObj = { size: 9999 }
       if (sessionStorage.getItem('personalMess')) {
         const { departmentfloorId, departmentId } = sessionStorage.getItem('personalMess')
         typeObj = Object.assign(typeObj, { departmentfloorId, departmentId })

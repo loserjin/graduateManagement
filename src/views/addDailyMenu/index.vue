@@ -211,12 +211,19 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="pagination">
+    <div
+      class="pagination"
+      style="width: 50%;margin: 10px auto;text-align:center;font-size:1.1rem"
+    >
       <el-pagination
         v-if="total"
-        background
-        layout="total, prev, pager, next"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       />
     </div>
   </div>
@@ -245,12 +252,16 @@ export default {
       tableData: [],
       menuIdList: [],
       total: 0,
+      currentPage: 1,
+      menuPic: '',
+      pageSize: 5,
       loading: false,
       dateOptions: {
         disabledDate(time) {
-          const nowDate = Date.now() - 8.64e7
-          const minDate = nowDate + 3 * 24 * 60 * 60 * 1000
-          return time.getTime() < minDate
+          // const nowDate = Date.now() - 8.64e7
+          // const minDate = nowDate + 3 * 24 * 60 * 60 * 1000
+          // return time.getTime() < minDate
+          return false
         }
       }
     }
@@ -344,6 +355,39 @@ export default {
     handleCheck(row) {
       this.form = row
       this.changeAddVisible = true
+    },
+    async changeData(current, size, input) {
+      this.loading = true
+      if (input) {
+        await getMenuList({ current, size, menuName: input }).then(res => {
+          this.tableData = res.data.records
+          this.total = res?.data?.total || 0
+        })
+        this.loading = false
+        return
+      }
+
+      await getMenuList({ current, size }).then(res => {
+        this.tableData = res.data.records
+        this.total = res?.data?.total || 0
+      })
+      this.loading = false
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      if (this.input) {
+        this.changeData(this.currentPage, val, this.input)
+        return
+      }
+      this.changeData(this.currentPage, val)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      if (this.input) {
+        this.changeData(this.currentPage, val, this.input)
+        return
+      }
+      this.changeData(val, this.pageSize)
     }
   }
 }

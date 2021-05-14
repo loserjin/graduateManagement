@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 获取日常菜单
-export function getMaterialList(params) {
+export function getDailyMenuList(params) {
   return request({
     url: '/dailymenu/infos',
     method: 'GET',

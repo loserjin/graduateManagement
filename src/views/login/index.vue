@@ -137,8 +137,9 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then((res) => {
             this.$router.push({ path: '/dashboard' })
             this.loading = false
-          }).catch(() => {
+          }).catch((err) => {
             this.loading = false
+            console.log(err)
             this.$message.error('请检查用户名，密码，登录类型！')
           })
         } else {

@@ -21,14 +21,14 @@
           >搜索</el-button>
         </span>
       </div>
-      <div>
+      <!-- <div>
         <span>
           <el-button
             type="primary"
             @click="handleExport"
           >导出</el-button>
         </span>
-      </div>
+      </div> -->
       <div class="date">
         <el-date-picker
           v-model="date"
@@ -168,64 +168,20 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="departmentName"
-        label="饭堂名称"
+        prop="componentId"
+        label="配料ID"
         align="center"
       />
       <el-table-column
-        prop="departmentfloorName"
-        label="楼层名称"
+        prop="componentName"
+        label="配料名称"
         align="center"
       />
       <el-table-column
-        prop="purchaseId"
-        label="订单ID"
+        prop="componentNum"
+        label="配料数量"
         align="center"
       />
-      <el-table-column
-        prop="purchaseType"
-        label="类别"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseName"
-        label="材料名称"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseTotal"
-        label="单价"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseTotalmoney"
-        label="总价"
-        align="center"
-      />
-      <el-table-column
-        prop="purchaseCreatime"
-        label="日期"
-        width="120"
-        align="center"
-      />
-      <el-table-column
-        fixed="right"
-        label="操作"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            size="small"
-            @click="handleChange(scope.row)"
-          >修改</el-button>
-          <el-button
-            type="text"
-            size="small"
-            @click="handleDelete(scope.row)"
-          >移除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <div
       class="pagination"
@@ -409,13 +365,13 @@ export default {
 
     async handleSearch() {
       const obj = {}
-      if (this.inputDing) { obj.departmentName = this.inputDing }
-      if (this.inputFloor) { obj.departmentfloorName = this.inputFloor }
-      if (this.date) { obj.data = this.date }
+      if (this.inputDing) { obj.departmentId = this.inputDing }
+      if (this.inputFloor) { obj.departmentfloorId = this.inputFloor }
+      if (this.date) { obj.date = this.date }
       try {
         this.loading = true
         getMaterialList(obj).then(response => {
-          this.tableData = response.data.records
+          this.tableData = response.data.allcompoent
           this.total = response.data.total
         })
       } catch {
