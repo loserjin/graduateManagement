@@ -5,7 +5,7 @@
         <span class="input">
           <el-input
             v-model="input"
-            placeholder="请输入配料ID"
+            placeholder="请输入配料名称"
           />
         </span>
         <span>
@@ -37,7 +37,7 @@
           >
             <el-form-item
               v-if="isChange"
-              label="材料ID"
+              label="配料ID"
             >
               <el-input
                 v-model="form.componentId"
@@ -45,23 +45,72 @@
               />
             </el-form-item>
             <el-form-item
-              label="材料名称"
+              label="配料名称"
               prop="componentName"
               :rules="[
-                {required: true,message: '材料名称不能为空'}
+                {required: true,message: '配料名称不能为空'}
               ]"
             >
               <el-input v-model.trim="form.componentName" />
             </el-form-item>
             <el-form-item
-              label="材料价格(元)"
+              label="配料价格(元)"
               prop="componentMoney"
               :rules="[
-                {required: true,message: '材料价格不能为空'},
-                { type: 'number', message: '材料价格必须为数字值'}
+                {required: true,message: '配料价格不能为空'},
+                { type: 'number', message: '配料价格必须为数字值'}
               ]"
             >
               <el-input v-model.number.trim="form.componentMoney" />
+            </el-form-item>
+            <el-form-item
+              label="配料图片"
+              prop="menuPic"
+            >
+              <el-upload
+                v-if="isAdd"
+                action="http://159.75.3.52:8090/upload"
+                list-type="picture-card"
+                :limit="limit"
+                :before-upload="beforePicUpload"
+                :on-success="uploadPicSucc"
+              >
+                <i class="el-icon-plus" />
+              </el-upload>
+              <el-dialog
+                :visible.sync="dialogImgVisible"
+                prop="menuPic"
+              >
+                <img
+                  width="100%"
+                  :src="form.menuPic"
+                  alt="菜图"
+                >
+              </el-dialog>
+              <el-image
+                v-if="isChange"
+                style="width: 100px; height: 100px"
+                :src="form.componentPic"
+              />
+            </el-form-item>
+            <el-form-item
+              label="配料类型"
+              prop="componentType"
+              :rules="[
+                {required: true,message: '配料类型不能为空'}
+              ]"
+            >
+              <el-select
+                v-model="form.componentType"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
           </el-form>
         </div>
@@ -109,10 +158,18 @@
         align="center"
       />
       <el-table-column
-        prop="componentPic"
         label="配料图片"
         align="center"
-      />
+      >
+        <template scope="scope">
+          <img
+            :src="scope.row.componentPic"
+            width="50"
+            height="40"
+            class="head_pic"
+          >
+        </template>
+      </el-table-column>
       <el-table-column
         prop="adminId"
         label="管理员ID"
@@ -150,7 +207,7 @@
         v-if="total"
         :current-page="currentPage"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="5"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -166,9 +223,7 @@ export default {
 
   data() {
     return {
-      form: {
-        name: ''
-      },
+      form: {},
       isAdd: false,
       isChange: false,
       input: '',
@@ -177,8 +232,22 @@ export default {
       tableData: [],
       total: 0,
       currentPage: 1,
+      limit: 1,
+      menuPic: '',
       pageSize: 5,
-      loading: false
+      loading: false,
+      dialogImgVisible: false,
+      options: [{
+        value: 0,
+        label: '荤类'
+      }, {
+        value: 1,
+        label: '素类'
+      }, {
+        value: 2,
+        label: '调料'
+      }],
+      value: ''
     }
   },
   mounted() {
@@ -222,7 +291,7 @@ export default {
       if (this.input) {
         try {
           this.loading = true
-          getBurdenList({ componentId: this.input }).then(response => {
+          getBurdenList({ componentName: this.input }).then(response => {
             this.tableData = response.data.records
             this.total = response.data.total
           })
@@ -232,7 +301,7 @@ export default {
         this.loading = false
       } else {
         this.$message({
-          message: '请输入配料id',
+          message: '请输入配料名称',
           type: 'warning'
         })
       }
@@ -240,15 +309,33 @@ export default {
     handleChange(row) {
       this.title = '修改菜谱配料信息'
       this.form = row
+      console.log(this.form, 11111)
+      this.form.componentType = Number(this.form.componentType)
       this.isChange = true
+      this.menuPic = row.menuPic
       this.changeVisible = true
     },
+    beforePicUpload(file) {
+      // const picReg = /\.(png|jpg|gif|jpeg|webp)$/i
+      // const isJPG = picReg.test(file.type)
+      const isLt2M = file.size / 1024 / 1024 < 10
 
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是png|jpg|gif|jpeg|webp格式!')
+      // }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 10MB!')
+      }
+      // isJPG &&
+      return isLt2M
+    },
     handleAdd() {
-      this.title = '修改食材订单信息'
+      this.title = '新增配料信息'
       this.form = {
         componentName: '',
-        componentMoney: ''
+        componentMoney: '',
+        componentType: '',
+        componentPic: ''
       }
       this.changeVisible = true
       this.isAdd = true
@@ -315,6 +402,9 @@ export default {
         return
       }
       this.changeData(val, this.pageSize)
+    },
+    uploadPicSucc(response, file, fileList) {
+      this.form.componentPic = response.data
     }
   }
 }

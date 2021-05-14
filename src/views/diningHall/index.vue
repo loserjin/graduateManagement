@@ -44,7 +44,37 @@
                 :disabled="disable"
               />
             </el-form-item>
-
+            <el-form-item
+              label="饭堂图片"
+              prop="departmentPic"
+            >
+              <el-upload
+                v-if="!isCheck"
+                ref="upload"
+                action="http://159.75.3.52:8090/upload"
+                :before-upload="beforePicUpload"
+                list-type="picture-card"
+                :limit="limit"
+                :on-success="uploadPicSucc"
+              >
+                <i class="el-icon-plus" />
+              </el-upload>
+              <el-dialog
+                :visible.sync="dialogImgVisible"
+                prop="departmentPic"
+              >
+                <img
+                  width="100%"
+                  :src="form.departmentPic"
+                  alt="菜图"
+                >
+              </el-dialog>
+              <el-image
+                v-if="isCheck"
+                style="width: 100px; height: 100px"
+                :src="form.departmentPic"
+              />
+            </el-form-item>
           </el-form>
         </div>
         <span
@@ -85,6 +115,19 @@
         label="饭堂"
         align="center"
       />
+      <el-table-column
+        label="饭堂图片"
+        align="center"
+      >
+        <template scope="scope">
+          <img
+            :src="scope.row.departmentPic"
+            width="50"
+            height="40"
+            class="head_pic"
+          >
+        </template>
+      </el-table-column>
       <el-table-column
         fixed="right"
         label="操作"
@@ -155,7 +198,9 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 5,
-      loading: false
+      loading: false,
+      dialogImgVisible: false,
+      limit: 1
     }
   },
   mounted() {
@@ -181,6 +226,7 @@ export default {
                   message: '新增成功',
                   type: 'success'
                 })
+                this.$refs?.upload?.clearFiles()
                 this.getDiningHallList()
               } else {
                 this.$message.error('新增失败，请重试')
@@ -194,6 +240,7 @@ export default {
                   message: '修改成功',
                   type: 'success'
                 })
+                this.$refs?.upload?.clearFiles()
                 this.getDiningHallList()
               } else {
                 this.$message.error('修改失败，请重试')
@@ -208,6 +255,16 @@ export default {
           return false
         }
       })
+    },
+    uploadPicSucc(response, file, fileList) {
+      this.form.departmentPic = response.data
+    },
+    beforePicUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 10MB!')
+      }
+      return isLt2M
     },
     handleEdit(row) {
       this.changeVisible = true

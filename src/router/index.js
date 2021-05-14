@@ -197,26 +197,25 @@ export const asyncRoutes = [
         path: 'administrator',
         name: 'Administrator',
         component: () => import('@/views/administrator/index'),
-        meta: { title: '管理员', roles: ['0'] }
+        meta: { title: '管理员', roles: ['1'] }
       },
       {
         path: 'user',
         name: 'User',
-        component: () => import('@/views/user/index'),
-        meta: { title: '用户', roles: ['0'] }
+        component: () => import('@/views/user/index')
       }
     ]
   },
   {
     path: '/diningHall',
     component: Layout,
-    meta: { title: '饭堂楼层信息', icon: '建筑' },
+    meta: { title: '饭堂楼层信息', icon: '建筑', roles: ['1'] },
     children: [
       {
         path: '/dining',
         name: 'diningHall',
         component: () => import('@/views/diningHall/index'),
-        meta: { title: '饭堂信息' }
+        meta: { title: '饭堂信息', roles: ['0'] }
       },
       {
         path: 'index',
@@ -260,12 +259,19 @@ export const asyncRoutes = [
   {
     path: '/dailyMenu',
     component: Layout,
+    meta: { title: '日常菜单', icon: '菜谱' },
     children: [
       {
-        path: 'index',
-        name: 'dailyMenu',
+        path: '/addDailyMenu',
+        name: 'addDailyMenu',
+        component: () => import('@/views/addDailyMenu/index'),
+        meta: { title: '新增日常菜单' }
+      },
+      {
+        path: '/dailyMenuAll',
+        name: 'dailyMenuAll',
         component: () => import('@/views/dailyMenu/index'),
-        meta: { title: '今日菜谱', icon: '菜谱' }
+        meta: { title: '查看日常菜单' }
       }
     ]
   },
@@ -294,6 +300,30 @@ export const asyncRoutes = [
         meta: { title: '用户订单', icon: '订单' },
         name: 'orderForm',
         component: () => import('@/views/orderForm/index')
+      }
+    ]
+  },
+  {
+    path: '/comments',
+    component: Layout,
+    children: [
+      {
+        path: 'comments',
+        meta: { title: '用户评论', icon: '订单' },
+        name: 'comments',
+        component: () => import('@/views/comments/index')
+      }
+    ]
+  },
+  {
+    path: '/publicity',
+    component: Layout,
+    children: [
+      {
+        path: 'publicity',
+        meta: { title: '公示信息', icon: '订单' },
+        name: 'publicity',
+        component: () => import('@/views/publicity/index')
       }
     ]
   },

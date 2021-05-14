@@ -39,7 +39,10 @@
             placeholder="选择日期"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
-          />
+            :picker-options="dateOptions"
+          >
+            />
+          </el-date-picker>
         </span>
       </div>
       <div>
@@ -242,7 +245,14 @@ export default {
       tableData: [],
       menuIdList: [],
       total: 0,
-      loading: false
+      loading: false,
+      dateOptions: {
+        disabledDate(time) {
+          const nowDate = Date.now() - 8.64e7
+          const minDate = nowDate + 3 * 24 * 60 * 60 * 1000
+          return time.getTime() < minDate
+        }
+      }
     }
   },
   mounted() {

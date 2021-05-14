@@ -30,7 +30,7 @@ export function deleteDiningHall(data) {
 // 获取饭堂楼层信息
 export function getDiningFloor(params) {
   return request({
-    url: '/department/infos',
+    url: '/departmentfloor/infos',
     method: 'GET',
     params: { params }
   })
@@ -50,6 +50,6 @@ export function deleteDiningFloor(data) {
   return request({
     url: '/departmentfloor/delect',
     method: 'POST',
-    params: data
+    data
   })
 }

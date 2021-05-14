@@ -37,8 +37,9 @@
         <el-date-picker
           v-model="date"
           type="date"
-          placeholder="选择订单日期"
+          placeholder="选择就餐日期"
           format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
         />
       </div>
     </div>
@@ -90,8 +91,8 @@
         align="center"
       />
       <el-table-column
-        prop="userorderCreatime"
-        label="下单时间"
+        prop="dailymenuCreatime"
+        label="就餐时间"
         align="center"
       />
       <el-table-column
@@ -185,12 +186,16 @@
               <el-form-item label="楼层名称：">
                 <span>{{ form.departmentfloorName }}</span>
               </el-form-item>
-              <el-form-item label="用餐时间段：">
-                <span>{{ form.dailymenuTime===0?'早上':form.dailymenuTime===1?'中午':'下午' }}</span>
-              </el-form-item>
               <el-form-item label="订单创建日期：">
                 <span>{{ form.userorderCreatime }}</span>
               </el-form-item>
+              <el-form-item label="用户就餐日期：">
+                <span>{{ form.dailymenuCreatime }}</span>
+              </el-form-item>
+              <el-form-item label="用餐时间段：">
+                <span>{{ form.dailymenuTime===0?'早上':form.dailymenuTime===1?'中午':'下午' }}</span>
+              </el-form-item>
+
             </el-form>
           </div>
           <span

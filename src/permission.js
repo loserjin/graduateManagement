@@ -23,17 +23,17 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
-      if (!sessionStorage.getItem('adminId')) {
-        const { adminRole } = await store.dispatch('user/getInfo')
-        const roles = adminRole
-        const accessRoutes = await store.dispatch(
-          'permission/generateRoutes',
-          roles
-        )
-        router.addRoutes(accessRoutes)
-        console.log(router, 'router')
-        next({ ...to, replace: true })
-      }
+      // if (!sessionStorage.getItem('hasInfo')) {
+      //   const { adminRole } = await store.dispatch('user/getInfo')
+      //   const roles = adminRole
+      //   const accessRoutes = await store.dispatch(
+      //     'permission/generateRoutes',
+      //     roles
+      //   )
+      //   router.options.routes = router.options.routes.concat(accessRoutes)
+      //   router.addRoutes(accessRoutes)
+      //   next({ ...to, replace: true })
+      // }
       if (hasGetUserInfo) {
         next()
       } else {

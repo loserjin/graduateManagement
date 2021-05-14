@@ -19,6 +19,7 @@ export function addRegister(data) {
 
 // 获取管理员个人信息
 export function getAdminInfo(params) {
+  console.log(params)
   return request({
     url: '/admin/info',
     method: 'get',

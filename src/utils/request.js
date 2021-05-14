@@ -21,6 +21,9 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code !== 200) {
+      if (window.navigator.onLine) {
+        return Promise.reject('网络未连接，请联网！')
+      }
       return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       if (response.headers.authorization) {

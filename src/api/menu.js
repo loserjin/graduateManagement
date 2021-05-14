@@ -35,3 +35,30 @@ export function addDailyMenu(data) {
     params: data
   })
 }
+
+// 查看某个菜得配料
+export function getMenuComponents(data) {
+  return request({
+    url: '/menucomponent/infos',
+    method: 'GET',
+    params: data
+  })
+}
+
+// 删除某个菜得配料
+export function deleteMenuComponent(data) {
+  return request({
+    url: '/menucomponent/delect',
+    method: 'POST',
+    params: data
+  })
+}
+
+// 新增某个菜得配料
+export function addMenuComponent(data) {
+  return request({
+    url: '/menucomponent/edit',
+    method: 'POST',
+    params: data
+  })
+}

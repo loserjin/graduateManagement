@@ -46,8 +46,9 @@ const actions = {
           const { res, token } = response
           sessionStorage.setItem('token', token)
           sessionStorage.setItem('personalMess', res.data)
-
+          sessionStorage.setItem('adminRole', res.data.adminRole)
           sessionStorage.setItem('adminName', res.data.adminName)
+          sessionStorage.setItem('adminId', res.data.adminId)
           commit('SET_TOKEN', token)
           commit('SET_ADMINID', res.data.adminId)
           commit('SET_NAME', res.data.adminName)
@@ -62,13 +63,12 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
-    const personalMess = sessionStorage.getItem('personalMess')
+    const mess = sessionStorage.getItem('personalMess')
+    const adminRole = mess?.adminRole
     return new Promise((resolve, reject) => {
-      const { adminId, adminRole, adminName } = personalMess
-      sessionStorage.setItem('adminId', personalMess.adminId)
-      const data = { adminId, adminRole, adminName }
-      commit('SET_NAME', adminName)
-      commit('SET_ADMINID', adminId)
+      const hasInfo = 'hasInfo'
+      sessionStorage.setItem('hasInfo', hasInfo)
+      const data = { hasInfo, adminRole }
       resolve(data)
     })
   },
@@ -84,6 +84,7 @@ const actions = {
           sessionStorage.removeItem('adminId')
           sessionStorage.removeItem('adminName')
           sessionStorage.removeItem('personalMess')
+          sessionStorage.removeItem('hasInfo')
           commit('RESET_STATE')
           resolve()
         })

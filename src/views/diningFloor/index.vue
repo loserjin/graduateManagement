@@ -27,7 +27,7 @@
             >
               <el-input
                 v-model.trim="form.departmentfloorId"
-                disable
+                disabled
               />
             </el-form-item>
             <el-form-item
@@ -39,7 +39,7 @@
             >
               <el-input
                 v-model.trim="form.departmentfloorName"
-                :disable="disable"
+                :disabled="disable"
               />
             </el-form-item>
             <el-form-item
@@ -52,7 +52,38 @@
             >
               <el-input
                 v-model.number.trim="form.departmentId"
-                :disable="disable"
+                :disabled="disable"
+              />
+            </el-form-item>
+            <el-form-item
+              label="楼层图片"
+              prop="departmentfloorPic"
+            >
+              <el-upload
+                v-if="!isCheck"
+                ref="upload"
+                action="http://159.75.3.52:8090/upload"
+                :before-upload="beforePicUpload"
+                list-type="picture-card"
+                :limit="limit"
+                :on-success="uploadPicSucc"
+              >
+                <i class="el-icon-plus" />
+              </el-upload>
+              <el-dialog
+                :visible.sync="dialogImgVisible"
+                prop="departmentfloorPic"
+              >
+                <img
+                  width="100%"
+                  :src="form.departmentfloorPic"
+                  alt="菜图"
+                >
+              </el-dialog>
+              <el-image
+                v-if="isCheck"
+                style="width: 100px; height: 100px"
+                :src="form.departmentfloorPic"
               />
             </el-form-item>
             <el-form-item
@@ -64,7 +95,7 @@
             >
               <el-input
                 v-model.trim="form.departmentName"
-                :disable="disable"
+                :disabled="disable"
               />
             </el-form-item>
           </el-form>
@@ -117,6 +148,19 @@
         label="饭堂楼层名称"
         align="center"
       />
+      <el-table-column
+        label="楼层图片"
+        align="center"
+      >
+        <template scope="scope">
+          <img
+            :src="scope.row.departmentfloorPic"
+            width="50"
+            height="40"
+            class="head_pic"
+          >
+        </template>
+      </el-table-column>
       <el-table-column
         fixed="right"
         label="操作"
@@ -189,7 +233,9 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 5,
-      loading: false
+      loading: false,
+      dialogImgVisible: false,
+      limit: 1
     }
   },
   mounted() {
@@ -217,6 +263,7 @@ export default {
                   message: '新增成功',
                   type: 'success'
                 })
+                this.$refs?.upload?.clearFiles()
                 this.getData()
               } else {
                 this.$message.error('新增失败，请重试')
@@ -230,6 +277,7 @@ export default {
                   message: '修改成功',
                   type: 'success'
                 })
+                this.$refs?.upload?.clearFiles()
                 this.getData()
               } else {
                 this.$message.error('修改失败，请重试')
@@ -245,8 +293,18 @@ export default {
         }
       })
     },
+    uploadPicSucc(response, file, fileList) {
+      this.form.departmentfloorPic = response.data
+    },
+    beforePicUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 10
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 10MB!')
+      }
+      return isLt2M
+    },
     handleCheck(row) {
-      this.title = '查看食材订单信息'
+      this.title = '查看饭堂楼层信息'
       this.isCheck = true
       this.disable = true
       this.form = row
@@ -254,13 +312,13 @@ export default {
     },
     handleChange(row) {
       this.isEdit = true
-      this.title = '修改食材订单信息'
+      this.title = '修改饭堂楼层信息'
       this.disable = false
       this.form = row
       this.changeVisible = true
     },
     handleAdd() {
-      this.title = '增加食材订单信息'
+      this.title = '增加饭堂楼层信息'
       this.form = {
         departmentfloorName: '',
         departmentId: '',
@@ -279,9 +337,9 @@ export default {
             type: 'success'
           })
           this.getData()
-        } else {
-          this.$message.error('删除失败，请重试')
         }
+      }).catch(() => {
+        this.$message.error('删除失败!')
       })
     },
     handleClose() {

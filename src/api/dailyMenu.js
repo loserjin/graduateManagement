@@ -5,7 +5,7 @@ export function getMaterialList(params) {
   return request({
     url: '/dailymenu/infos',
     method: 'GET',
-    params: { params }
+    params: params
   })
 }
 

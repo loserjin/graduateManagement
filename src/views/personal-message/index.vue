@@ -28,8 +28,16 @@
       </div>
       <div class="mess_wrapper">
         <span class="mess_label">密码：</span>
-        <span class="mess_content"> <el-input v-model="message.adminPwd" :type="pwdType" /></span>
-        <span class="show-pwd" @click="showPwd">
+        <span class="mess_content">
+          <el-input
+            v-model="message.adminPwd"
+            :type="pwdType"
+          />
+        </span>
+        <span
+          class="show-pwd"
+          @click="showPwd"
+        >
           <svg-icon :icon-class="pwdType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </div>
@@ -56,7 +64,11 @@
     </div>
     <div class="changeMess_btn">
       <span>
-        <el-button type="primary" size="small" @click="changeMessClick">修改个人信息</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          @click="changeMessClick"
+        >修改个人信息</el-button>
       </span>
     </div>
     <div class="dialog">
@@ -67,7 +79,11 @@
         width="40%"
         :before-close="handleClose"
       >
-        <el-form ref="form" :model="form" label-width="120px">
+        <el-form
+          ref="form"
+          :model="form"
+          label-width="120px"
+        >
           <el-form-item label="密码：">
             <el-input v-model="form.adminPwd" />
           </el-form-item>
@@ -78,7 +94,10 @@
             <el-input v-model="form.adminTel" />
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-popover
             v-model="visible"
@@ -87,10 +106,22 @@
           >
             <p>您确定要修改个人信息吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="danger" size="mini" @click="confirmChange">确定</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                @click="visible = false"
+              >取消</el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="confirmChange"
+              >确定</el-button>
             </div>
-            <el-button slot="reference" type="primary" class="popBtn">确定</el-button>
+            <el-button
+              slot="reference"
+              type="primary"
+              class="popBtn"
+            >确定</el-button>
           </el-popover>
         </span>
       </el-dialog>
@@ -127,6 +158,7 @@ export default {
       try {
         getAdminInfo({ adminId: +adminId }).then(res => {
           this.message = res.data
+          console.log(res)
         })
       } catch {
         this.message('获取数据失败！')
@@ -173,56 +205,55 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
-  .content_wrapper{
-    .header_title{
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
+.content_wrapper {
+  .header_title {
     width: 100%;
     text-align: center;
     font-size: 1.2rem;
     font-weight: 1.1rem;
     margin-bottom: 1rem;
   }
-    width:40%;
-    margin: 10px auto;
-    .mess_wrapper{
-      display: flex;
-      .mess_label{
-        height: 40px;
-        line-height: 40px;
-        width: 120px;
-        text-align: right;
-
-      }
-      .mess_content{
-        height: 40px;
-        line-height: 40px;
-      }
-      .svg-container {
-        padding: 6px 5px 6px 15px;
-        color: $dark_gray;
-        vertical-align: middle;
-        width: 30px;
-        display: inline-block;
-      }
-      .show-pwd {
-        margin-left: 10px;
-        height: 40px;
-        line-height: 40px;
-        font-size: 18px;
-        color: $dark_gray;
-        cursor: pointer;
-        user-select: none;
-      }
+  width: 40%;
+  margin: 10px auto;
+  .mess_wrapper {
+    display: flex;
+    .mess_label {
+      height: 40px;
+      line-height: 40px;
+      width: 120px;
+      text-align: right;
+    }
+    .mess_content {
+      height: 40px;
+      line-height: 40px;
+    }
+    .svg-container {
+      padding: 6px 5px 6px 15px;
+      color: $dark_gray;
+      vertical-align: middle;
+      width: 30px;
+      display: inline-block;
+    }
+    .show-pwd {
+      margin-left: 10px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 18px;
+      color: $dark_gray;
+      cursor: pointer;
+      user-select: none;
     }
   }
-  .changeMess_btn{
-    width:40%;
-    text-align: right;
-    margin: 18px auto;
-  }
-  .popBtn{
-    margin-left: 5px;
-  }
+}
+.changeMess_btn {
+  width: 40%;
+  text-align: right;
+  margin: 18px auto;
+}
+.popBtn {
+  margin-left: 5px;
+}
 </style>

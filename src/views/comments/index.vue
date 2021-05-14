@@ -183,14 +183,14 @@ export default {
       this.inputFloor = ''
     },
     async handleSearch() {
+      console.log(11)
       if (!this.inputFloor && !this.inputDing) {
         this.$message('请输入信息')
         return
       }
       const obj = {}
-      if (this.inputDing) { obj.departmentName = this.inputDing }
-      if (this.inputFloor) { obj.departmentfloorName = this.inputFloor }
-      if (this.date) { obj.data = this.date }
+      if (this.inputDing) { obj.departmentId = this.inputDing }
+      if (this.inputFloor) { obj.departmentfloorId = this.inputFloor }
       try {
         this.loading = true
         getCommentsList(obj).then(response => {

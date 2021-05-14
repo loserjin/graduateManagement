@@ -32,6 +32,6 @@ export function deleteMenuType(data) {
   return request({
     url: '/type/delect',
     method: 'POST',
-    data
+    params: data
   })
 }
