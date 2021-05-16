@@ -8,3 +8,12 @@ export function getOrderList(data) {
     params: data
   })
 }
+
+// 获取订单列表
+export function getOrderLDetail(data) {
+  return request({
+    url: '/userorderdetail/infos',
+    method: 'GET',
+    params: data
+  })
+}

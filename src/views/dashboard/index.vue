@@ -30,6 +30,7 @@ export default {
     this.canteenEchart()
   },
   methods: {
+    // 性别比例表
     async initChart() {
       const myEcharts = echarts?.init(document.getElementById('mainUser'))
       let girl = 0
@@ -72,6 +73,7 @@ export default {
       }
       myEcharts?.setOption(option)
     },
+    // 饭堂楼层分布表
     async canteenEchart() {
       const canteenEchart = echarts?.init(document.getElementById('mainCanteen'))
       let canteenArr = []

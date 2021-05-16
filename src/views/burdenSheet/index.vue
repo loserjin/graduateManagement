@@ -254,6 +254,7 @@ export default {
     this.getData()
   },
   methods: {
+    // 获取所有食材订单数据
     async getData() {
       this.loading = true
       try {
@@ -268,6 +269,7 @@ export default {
       }
       this.loading = false
     },
+    // 弹窗关闭
     changeDialogClose() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
@@ -287,6 +289,7 @@ export default {
         }
       })
     },
+    // 搜索点击事件
     handleSearch() {
       if (this.input) {
         try {
@@ -306,15 +309,16 @@ export default {
         })
       }
     },
+    // 查看点击事件
     handleChange(row) {
       this.title = '修改菜谱配料信息'
       this.form = row
-      console.log(this.form, 11111)
       this.form.componentType = Number(this.form.componentType)
       this.isChange = true
       this.menuPic = row.menuPic
       this.changeVisible = true
     },
+    // 图片上传前校验
     beforePicUpload(file) {
       // const picReg = /\.(png|jpg|gif|jpeg|webp)$/i
       // const isJPG = picReg.test(file.type)
@@ -370,6 +374,7 @@ export default {
         })
       })
     },
+    // 分页数据改变
     async changeData(current, size, input) {
       this.loading = true
       if (input) {

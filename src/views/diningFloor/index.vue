@@ -242,6 +242,7 @@ export default {
     this.getData()
   },
   methods: {
+    // 获取所有的饭堂楼层
     async getData() {
       this.loading = true
       await getDiningFloor().then(response => {
@@ -293,9 +294,11 @@ export default {
         }
       })
     },
+    // 图片上传成功事件
     uploadPicSucc(response, file, fileList) {
       this.form.departmentfloorPic = response.data
     },
+    // 图片上传前校验
     beforePicUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 10
       if (!isLt2M) {
@@ -303,6 +306,7 @@ export default {
       }
       return isLt2M
     },
+    // 查看点击事件
     handleCheck(row) {
       this.title = '查看饭堂楼层信息'
       this.isCheck = true
@@ -310,6 +314,7 @@ export default {
       this.form = row
       this.changeVisible = true
     },
+    // 修改点击事件
     handleChange(row) {
       this.isEdit = true
       this.title = '修改饭堂楼层信息'
@@ -317,6 +322,7 @@ export default {
       this.form = row
       this.changeVisible = true
     },
+    // 增加点击事件
     handleAdd() {
       this.title = '增加饭堂楼层信息'
       this.form = {
@@ -328,6 +334,7 @@ export default {
       this.isAdd = true
       this.changeVisible = true
     },
+    // 删除点击事件
     handleDelete(row) {
       deleteDiningFloor({ departmentfloorId: row.departmentfloorId }).then(res => {
         if (res.code === 200) {
@@ -342,6 +349,7 @@ export default {
         this.$message.error('删除失败!')
       })
     },
+    // 弹窗关闭
     handleClose() {
       this.changeVisible = false
       this.isEdit = false
@@ -358,7 +366,6 @@ export default {
         this.loading = false
         return
       }
-
       await getDiningFloor({ current, size }).then(res => {
         this.tableData = res.data.records
       })

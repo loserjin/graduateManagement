@@ -258,10 +258,9 @@ export default {
       loading: false,
       dateOptions: {
         disabledDate(time) {
-          // const nowDate = Date.now() - 8.64e7
-          // const minDate = nowDate + 3 * 24 * 60 * 60 * 1000
-          // return time.getTime() < minDate
-          return false
+          const nowDate = Date.now() - 8.64e7
+          const minDate = nowDate + 3 * 24 * 60 * 60 * 1000
+          return time.getTime() < minDate
         }
       }
     }

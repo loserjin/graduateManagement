@@ -158,7 +158,6 @@ export default {
       try {
         getAdminInfo({ adminId: +adminId }).then(res => {
           this.message = res.data
-          console.log(res)
         })
       } catch {
         this.message('获取数据失败！')

@@ -14,7 +14,7 @@ export function deletePublicit(data) {
   return request({
     url: '/notice/delect',
     method: 'POST',
-    data
+    params: data
   })
 }
 

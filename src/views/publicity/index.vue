@@ -20,6 +20,9 @@
             @click="handleSearch"
           >搜索</el-button>
         </span>
+        <span class="clear_btn">
+          <el-button @click="handleClear">重置</el-button>
+        </span>
       </div>
       <div>
         <span>
@@ -105,7 +108,6 @@
               <el-select
                 v-model="form.noticeState"
                 placeholder="请选择"
-                :disabled="isChange"
               >
                 <el-option
                   v-for="item in options"
@@ -161,10 +163,13 @@
         align="center"
       />
       <el-table-column
-        prop="noticeState"
         label="公告状态"
         align="center"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.noticeState===1?'立即发布':'暂不发布' }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="noticeCreatime"
         label="发布时间"
@@ -185,7 +190,7 @@
             type="text"
             size="small"
             @click="handleCheck(scope.row)"
-          >查看</el-button>
+          >查看内容</el-button>
           <el-button
             type="text"
             size="small"
@@ -275,10 +280,11 @@ export default {
     this.getData()
   },
   methods: {
+    // 获取所有公告数据
     async getData() {
       this.loading = true
       try {
-        getPublicityList().then(response => {
+        await getPublicityList().then(response => {
           this.tableData = response.data.records
           this.total = response.data.total
         })
@@ -287,11 +293,13 @@ export default {
       }
       this.loading = false
     },
+    // 点击查看
     handleCheck(row) {
       this.noticeText = row.noticeTitle
       this.noticeTitle = row.noticeTitle
       this.checkVisible = true
     },
+    // 点击增加事件
     handleAdd() {
       this.title = '增加公示'
       this.form = {
@@ -304,16 +312,19 @@ export default {
       this.isAdd = true
       this.changeVisible = true
     },
+    // 点击确定关闭弹窗事件
     changeDialogClose() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           try {
+            delete this.form?.noticeCreatime
             editPublicity(this.form).then(response => {
               this.$message({
                 showClose: true,
                 message: '变更成功',
                 type: 'success'
               })
+              this.getData()
             }).catch(() => {
               this.$message.error('变更失败！')
             })
@@ -325,19 +336,21 @@ export default {
         }
       })
     },
+    // 关闭弹窗事件
     handleClose() {
       this.checkVisible = false
       this.changeVisible = false
       this.isChange = false
       this.isAdd = false
     },
+    // 点击修改事件
     handleChange(row) {
       this.title = '修改公告信息'
       this.form = row
       this.isChange = true
       this.changeVisible = true
     },
-
+    // 点击查看事件
     async handleSearch() {
       if (!this.inputId && !this.text) {
         this.$message('请输入信息')
@@ -345,7 +358,9 @@ export default {
       }
       const obj = {}
       if (this.text) { obj.text = this.text }
-      if (this.inputId) { obj.inputId = this.inputId }
+      if (this.inputId) {
+        obj.departmentId = this.inputId
+      }
       try {
         this.loading = true
         getPublicityList(obj).then(response => {
@@ -357,6 +372,13 @@ export default {
       }
       this.loading = false
     },
+    // 点击重置事件
+    handleClear() {
+      this.inputId = ''
+      this.text = ''
+      this.getData()
+    },
+    // 点击删除事件
     handleDelete(row) {
       this.$confirm('此操作将删除该公告, 是否继续?', '提示', {
         confirmButtonText: '确定删除',
@@ -382,6 +404,7 @@ export default {
         })
       })
     },
+    // 分页数据改变处理
     async changeData(current, size, input) {
       if (input) {
         this.loading = true
@@ -396,6 +419,7 @@ export default {
       })
       this.loading = false
     },
+    // 分页数据改变
     handleSizeChange(val) {
       this.pageSize = val
       if (this.text || this.inputId) {
@@ -407,6 +431,7 @@ export default {
       }
       this.changeData(this.currentPage, val)
     },
+    // 分页跳转事件
     handleCurrentChange(val) {
       this.currentPage = val
       if (this.text || this.inputId) {
@@ -431,6 +456,9 @@ export default {
     .input {
       width: 10rem;
       margin-right: 2rem;
+    }
+    .clear_btn {
+      margin-left: 10px;
     }
   }
 }

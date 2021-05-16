@@ -159,10 +159,11 @@ export default {
     this.getData()
   },
   methods: {
+    // 获取全部评论
     async getData() {
       this.loading = true
       try {
-        getCommentsList().then(response => {
+        await getCommentsList().then(response => {
           this.tableData = response.data.records
           this.total = response.data.total
         })
@@ -171,19 +172,24 @@ export default {
       }
       this.loading = false
     },
+    // 关闭弹窗
     handleClose() {
       this.checkVisible = false
     },
+    // 点击查看事件
     handleCheck(row) {
       this.comment = row.discussText
       this.checkVisible = true
     },
+    // 重置按钮点击事件
     handleClear() {
       this.inputDing = ''
       this.inputFloor = ''
+      this.getData()
     },
+    // 搜索点击事件
     async handleSearch() {
-      console.log(11)
+      // 判空，避免多余接口请求
       if (!this.inputFloor && !this.inputDing) {
         this.$message('请输入信息')
         return
@@ -202,6 +208,7 @@ export default {
       }
       this.loading = false
     },
+    // 分页数据改变
     async changeData(current, size, input) {
       if (input) {
         this.loading = true
@@ -216,6 +223,7 @@ export default {
       })
       this.loading = false
     },
+    // 分页页数大小改变
     handleSizeChange(val) {
       this.pageSize = val
       if (this.inputDing || this.inputFloor || this.date) {
@@ -227,6 +235,7 @@ export default {
       }
       this.changeData(this.currentPage, val)
     },
+    // 分页直接跳转
     handleCurrentChange(val) {
       this.currentPage = val
       if (this.inputDing || this.inputFloor || this.date) {

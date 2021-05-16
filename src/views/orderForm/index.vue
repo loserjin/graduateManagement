@@ -71,11 +71,6 @@
         align="center"
       />
       <el-table-column
-        prop="userorderMmoney"
-        label="应付尾款"
-        align="center"
-      />
-      <el-table-column
         prop="departmentName"
         label="取餐饭堂"
         align="center"
@@ -143,6 +138,9 @@
               </el-form-item>
               <el-form-item label="openID：">
                 <span>{{ form.openId }}</span>
+              </el-form-item>
+              <el-form-item label="订单菜式：">
+                <span>{{ form.menuName }}</span>
               </el-form-item>
               <el-form-item label="订单总金额(元)：">
                 <span>{{ form.userorderSmoney }}</span>
@@ -215,7 +213,7 @@
 </template>
 
 <script>
-import { getOrderList } from '@/api/order.js'
+import { getOrderList, getOrderLDetail } from '@/api/order.js'
 export default {
 
   data() {
@@ -233,8 +231,8 @@ export default {
       }],
       value: '',
       tableData: [],
-      loading: false,
-      checkVisible: false,
+      loading: false, // table加载动画效果
+      checkVisible: false, // 弹框控制
       total: 0,
       currentPage: 1,
       pageSize: 5,
@@ -246,15 +244,18 @@ export default {
     this.getData()
   },
   methods: {
+    // 获取全部用户订单
     async getData(mess) {
       try {
         this.loading = true
         if (mess) {
+          // 有输入筛选条件
           await getOrderList(mess).then(response => {
             this.tableData = response.data.records
             this.total = response.data.total
           })
         } else {
+          // 没有输入筛选条件
           await getOrderList().then(response => {
             this.tableData = response.data.records
             this.total = response.data.total
@@ -265,8 +266,10 @@ export default {
       }
       this.loading = false
     },
+    // 搜索按钮点击事件
     handleSearch() {
       const mess = {}
+      // 判断输入了什么
       if (this.input) {
         mess.name = this.input
       }
@@ -278,20 +281,35 @@ export default {
       }
       this.getData(mess)
     },
+    // 重置按钮点击事件
     handleClear() {
       this.input = ''
       this.value = ''
       this.date = ''
       this.getData()
     },
+    // 关闭弹窗
     handleClose() {
       this.checkVisible = false
     },
-    handleCheck(row) {
+    // 点击查看事件
+    async handleCheck(row) {
+      const userorderId = row?.userorderId
+      const menuList = []
+      if (userorderId) {
+        // 查看订单详情获取订单菜式
+        await getOrderLDetail({ userorderId }).then(res => {
+          // 可能订了不止一个菜
+          res?.data?.records.forEach(item => {
+            menuList.push(item?.menuName)
+          })
+        })
+      }
+      const menuName = menuList.join(',')
       this.checkVisible = true
-      this.form = row
-      console.log(row)
+      this.form = Object.assign(row, { menuName })
     },
+    // 分页重新调取接口获取数据
     async changeData(current, size, mess) {
       if (mess) {
         this.loading = true
@@ -306,6 +324,7 @@ export default {
       })
       this.loading = false
     },
+    // 页数发生变化
     handleSizeChange(val) {
       this.pageSize = val
       if (this.input || this.date || this.value) {
@@ -318,6 +337,7 @@ export default {
       }
       this.changeData(this.currentPage, val)
     },
+    // 分页跳转
     handleCurrentChange(val) {
       this.currentPage = val
       if (this.input || this.date || this.value) {
