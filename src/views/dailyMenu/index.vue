@@ -5,7 +5,13 @@
         <span class="input">
           <el-input
             v-model="search"
-            placeholder="请输入菜名"
+            placeholder="请输入饭堂Id"
+          />
+        </span>
+        <span class="input">
+          <el-input
+            v-model="floorId"
+            placeholder="请输入饭堂楼层Id"
           />
         </span>
         <span>
@@ -13,6 +19,9 @@
             type="primary"
             @click="handleSearch"
           >搜索</el-button>
+        </span>
+        <span>
+          <el-button @click="handleClear">重置</el-button>
         </span>
       </div>
       <div class="date">
@@ -182,6 +191,7 @@ export default {
     return {
       search: '',
       date: '',
+      floorId: '',
       menuDetail: false,
       isAdd: false,
       menuDtail: {
@@ -207,34 +217,50 @@ export default {
       this.loading = false
     },
     handleSearch() {
-      if (!this.search && !this.date) {
-        this.$message('请选择日期或填写内容')
+      if (!this.search && !this.date && this.floorId) {
+        this.$message('请选择日期或饭堂或楼层ID')
         return
       }
-      getDailyMenuList({ date: this.date, menuName: this.search }).then(res => {
+      const obj = {}
+      if (this.date) {
+        obj.date = this.date
+      }
+      if (this.search) {
+        obj.departmentId = this.search
+      }
+      if (this.floorId) {
+        obj.departmentfloorId = this.floorId
+      }
+      getDailyMenuList(obj).then(res => {
         this.tableData = res.data.records
       })
     },
     handleCheck(row) {
-      console.log(row)
+      this.menuDtail = row
       this.menuDetail = true
     },
     handleClose() {
       this.menuDetail = false
-      console.log('close')
     },
     handleDelete(message) {
-      console.log(message)
       deleteMaterial().then(res => {
         console.log(res)
       })
     },
+    handleClear() {
+      this.search = ''
+      this.date = ''
+      this.floorId = ''
+      this.getData()
+    },
     diaClose() {
-      console.log('close')
       this.menuDetail = false
       if (this.isAdd) {
         addMaterial().then(res => {
-          console.log(res)
+          this.$message('新增成功！')
+          this.getData()
+        }).catch(() => {
+          this.$message * ('新增失败')
         })
       }
     }
@@ -249,7 +275,7 @@ export default {
   .search {
     display: flex;
     .input {
-      width: 20rem;
+      width: 10rem;
       margin-right: 2rem;
     }
   }
