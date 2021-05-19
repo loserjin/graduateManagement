@@ -302,7 +302,6 @@ export default {
       this.loading = true
       try {
         getMaterialList().then(response => {
-          console.log(response)
           this.tableData = response.data.records
           this.total = response.data.total
         })
@@ -322,7 +321,6 @@ export default {
                   message: '新增成功',
                   type: 'success'
                 })
-                console.log(response)
               }).catch(() => {
                 this.$message.error('新增失败！')
               })
@@ -333,7 +331,6 @@ export default {
                   message: '修改成功',
                   type: 'success'
                 })
-                console.log(response)
               }).catch(() => {
                 this.$message.error('修改失败！')
               })
@@ -360,9 +357,8 @@ export default {
       this.checkVisible = true
     },
     handleExport() {
-      console.log(11)
+      // console.log(11)
     },
-
     async handleSearch() {
       const obj = {}
       if (this.inputDing) { obj.departmentId = this.inputDing }
@@ -382,7 +378,6 @@ export default {
 
     hanldeDelete(row) {
       deleteMaterial().then(res => {
-        console.log(res)
         this.$message({
           showClose: true,
           message: '删除成功',

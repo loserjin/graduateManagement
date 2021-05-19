@@ -124,26 +124,8 @@ export default {
         }
       }
       canteenEchart.setOption(option)
-    },
-    async getCanteenList() {
-      const departmentId = sessionStorage.getItem('departmentId')
-      if (departmentId === '1') {
-        getCanteensMess().then(res => {
-          console.log(res)
-        })
-        return
-      }
-      getCanteensMess({ departmentId }).then(res => {
-        console.log(res)
-      })
-    },
-    getUsers() {
-      getUsersList().then(res => {
-        console.log(res)
-      })
     }
   }
-
 }
 </script>
 

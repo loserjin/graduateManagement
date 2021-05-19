@@ -290,7 +290,6 @@ export default {
       this.disable = false
     },
     handleDelete(row) {
-      console.log(row)
       deleteDiningHall({ departmentId: row.departmentId }).then(res => {
         if (res.code === 200) {
           this.$message({

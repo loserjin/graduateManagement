@@ -139,7 +139,6 @@ export default {
             this.loading = false
           }).catch((err) => {
             this.loading = false
-            console.log(err)
             this.$message.error('请检查用户名，密码，登录类型！')
           })
         } else {

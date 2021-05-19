@@ -242,10 +242,16 @@ export default {
     handleClose() {
       this.menuDetail = false
     },
-    handleDelete(message) {
-      deleteMaterial().then(res => {
-        console.log(res)
-      })
+    async handleDelete(message) {
+      try {
+        const res = await deleteMaterial({ dailymenuId: message.dailymenuId })
+        if (res) {
+          this.$message('删除成功！')
+        }
+        this.getData()
+      } catch {
+        this.$message('删除失败！')
+      }
     },
     handleClear() {
       this.search = ''
