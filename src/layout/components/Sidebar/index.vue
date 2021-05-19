@@ -40,22 +40,26 @@ export default {
     }
   },
   methods: {
-    searchMeta(router, roleType) {
-      if (router?.meta) {
-        if (router.meta?.roles) {
-          if (router.meta?.roles.includes(roleType)) {
-            if (router?.children) {
-              router?.children.forEach(item => {
-                this.searchMeta(item)
-              })
-            }
-            return true
-          }
-          return false
-        }
+    hasPermission(roles, route) {
+      if (route.meta && route.meta.roles) {
+        const rolesArr = route.meta.roles
+        return rolesArr.some(role => role === roles)
+      } else {
         return true
       }
-      return true
+    },
+    filterAsyncRoutes(routes, roles) {
+      const res = []
+      routes.forEach(route => {
+        const tmp = { ...route }
+        if (this.hasPermission(roles, tmp)) {
+          if (tmp.children) {
+            tmp.children = this.filterAsyncRoutes(tmp.children, roles)
+          }
+          res.push(tmp)
+        }
+      })
+      return res
     }
   },
   computed: {
@@ -64,23 +68,8 @@ export default {
     ]),
     routes() {
       const adminRole = sessionStorage.getItem('adminRole')
-      const menu = sessionStorage.getItem('menu')
-      // console.log(adminRole, 111, typeof adminRole)
-      // let menuRouter = []
-      // if (adminRole) {
-      //   menuRouter = this.$router.options.routes.filter(item => {
-      //     return this.searchMeta(item)
-      //     // console.log(item, 111)
-      //     // console.log(item.meta?.roles, typeof item.meta?.roles)
-      //     // if (item?.meta?.roles && item?.meta?.roles.includes(adminRole)) {
-      //     //   console.log(4564564654)
-      //     //   return true
-      //     // } else {
-      //     //   return true
-      //     // }
-      //   })
-      // }
-      return this.$router.options.routes
+      const cloneRouter = this.filterAsyncRoutes(this.$router.options.routes, adminRole)
+      return cloneRouter
     },
     activeMenu() {
       const route = this.$route
