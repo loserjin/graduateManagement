@@ -164,8 +164,8 @@ export default {
       this.loading = true
       try {
         await getCommentsList().then(response => {
-          this.tableData = response.data.records
-          this.total = response.data.total
+          this.tableData = response.data?.records
+          this.total = response.data.total || 0
         })
       } catch {
         return false
